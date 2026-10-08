@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PKTY Huỳnh Như</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #FFF8F0;
+      --warm-orange: #FF7043;
+      --soft-orange: #FFB74D;
+      --blush: #FFCCBC;
+      --teal: #26A69A;
+      --teal-light: #80CBC4;
+      --yellow: #FFD54F;
+      --green: #66BB6A;
+      --text: #3E2723;
+      --text-light: #6D4C41;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ===== LANGUAGE SWITCHER ===== */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--blush);
+      border-radius: 99px;
+      padding: 4px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: 99px;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: background 0.25s, color 0.25s, transform 0.15s;
+    }
+    .lang-btn.active {
+      background: var(--warm-orange);
+      color: white;
+      transform: scale(1.05);
+    }
+    .lang-btn:not(.active):hover { background: rgba(255,255,255,0.6); }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,248,240,0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--blush);
+    }
+    .logo {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.5rem;
+      color: var(--warm-orange);
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .logo-paw {
+      width: 36px; height: 36px;
+      background: var(--warm-orange);
+      border-radius: 50% 50% 50% 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      animation: pawWobble 3s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pawWobble {
+      0%,100% { transform: rotate(-5deg); }
+      50%     { transform: rotate(5deg); }
+    }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-weight: 700; font-size: 0.95rem;
+      color: var(--text-light); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 3px; background: var(--warm-orange);
+      border-radius: 99px; transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--warm-orange); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--warm-orange); color: white !important;
+      padding: 9px 22px; border-radius: 99px; font-weight: 800 !important;
+      box-shadow: 0 4px 0 #c95c30;
+      transition: transform 0.2s, box-shadow 0.2s !important;
+    }
+    .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 0 #c95c30 !important; }
+    .nav-cta::after { display: none !important; }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh; padding: 120px 60px 80px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 40px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg-blob {
+      position: absolute;
+      border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+      opacity: 0.22; z-index: 0;
+    }
+    .blob1 { width: 500px; height: 500px; background: var(--soft-orange); top: -100px; right: -100px; animation: blobMorph 8s ease-in-out infinite; }
+    .blob2 { width: 300px; height: 300px; background: var(--teal-light); bottom: 0; left: -80px; animation: blobMorph 10s ease-in-out infinite reverse; }
+    .blob3 { width: 200px; height: 200px; background: var(--yellow); bottom: 100px; right: 200px; animation: blobMorph 6s ease-in-out infinite 2s; }
+    @keyframes blobMorph {
+      0%,100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; }
+      33%  { border-radius: 30% 70% 40% 60% / 60% 40% 70% 30%; }
+      66%  { border-radius: 50% 50% 30% 70% / 40% 70% 30% 60%; }
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blush); color: var(--warm-orange);
+      font-weight: 800; font-size: 0.85rem;
+      padding: 8px 18px; border-radius: 99px; margin-bottom: 24px;
+    }
+    .hero-badge .dot {
+      width: 8px; height: 8px; background: var(--warm-orange);
+      border-radius: 50%; animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+    h1 { font-family: 'Baloo 2', cursive; font-size: 3.8rem; line-height: 1.15; color: var(--text); margin-bottom: 20px; }
+    h1 span { color: var(--warm-orange); }
+    .hero-desc { font-size: 1.1rem; color: var(--text-light); line-height: 1.75; max-width: 460px; margin-bottom: 36px; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--warm-orange); color: white; border: none;
+      padding: 15px 34px; border-radius: 99px;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
+      cursor: pointer; box-shadow: 0 6px 0 #c95c30;
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #c95c30; }
+    .btn-primary:active { transform: translateY(2px); box-shadow: 0 3px 0 #c95c30; }
+    .btn-secondary {
+      background: white; color: var(--warm-orange);
+      border: 2.5px solid var(--blush); padding: 13px 30px; border-radius: 99px;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
+      cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--warm-orange); transform: translateY(-2px); }
+    .hero-stats { display: flex; gap: 40px; margin-top: 44px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Baloo 2', cursive; font-size: 2rem; color: var(--warm-orange); }
+    .stat-label { font-size: 0.78rem; color: var(--text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Hero card */
+    .hero-illustration { position: relative; z-index: 1; display: flex; justify-content: center; }
+    .hero-card {
+      background: white; border-radius: 32px; padding: 36px;
+      box-shadow: 0 20px 60px rgba(255,112,67,0.15), 0 0 0 3px var(--blush);
+      max-width: 360px; width: 100%; position: relative;
+    }
+    .animal-illustration { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+    .dog-svg { animation: float 4s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .floating-pill {
+      position: absolute; background: white; border-radius: 99px;
+      padding: 9px 16px; font-weight: 800; font-size: 0.8rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    }
+    .pill-1 { top: -10px; left: -28px; color: var(--teal); animation: floatPill 5s ease-in-out infinite; }
+    .pill-2 { bottom: 30px; right: -28px; color: var(--warm-orange); animation: floatPill 5s ease-in-out infinite 1.5s; }
+    .pill-3 { bottom: -10px; left: 18px; color: #8D6E63; animation: floatPill 5s ease-in-out infinite 3s; }
+    @keyframes floatPill { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+
+    /* ===== SECTIONS SHARED ===== */
+    section { padding: 96px 60px; }
+    .section-tag {
+      display: inline-block; background: var(--blush); color: var(--warm-orange);
+      font-weight: 800; font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 1.5px; padding: 6px 16px; border-radius: 99px; margin-bottom: 14px;
+    }
+    .section-title { font-family: 'Baloo 2', cursive; font-size: 2.6rem; line-height: 1.2; margin-bottom: 14px; }
+    .section-sub { color: var(--text-light); font-size: 1rem; line-height: 1.75; max-width: 500px; }
+
+    /* ===== SERVICES ===== */
+    #services { background: white; position: relative; overflow: hidden; }
+    .services-header { text-align: center; margin-bottom: 60px; }
+    .services-header .section-sub { margin: 0 auto; }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1080px; margin: 0 auto; }
+    .services-grid .service-card:nth-child(4) { grid-column: 1 / 2; }
+    .services-grid .service-card:nth-child(5) { grid-column: 2 / 3; }
+    .service-card {
+      background: var(--cream); border-radius: 22px; padding: 32px 26px;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer; border: 2px solid transparent;
+    }
+    .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(255,112,67,0.15); border-color: var(--blush); }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 70px; height: 70px; border-radius: 0 22px 0 70px; opacity: 0.13;
+    }
+    .service-card:nth-child(1)::before { background: var(--warm-orange); }
+    .service-card:nth-child(2)::before { background: var(--teal); }
+    .service-card:nth-child(3)::before { background: var(--yellow); }
+    .service-card:nth-child(4)::before { background: var(--green); }
+    .service-card:nth-child(5)::before { background: var(--soft-orange); }
+    .service-card:nth-child(6)::before { background: var(--teal-light); }
+    .service-icon { font-size: 2.6rem; margin-bottom: 18px; display: block; }
+    .service-title { font-family: 'Baloo 2', cursive; font-size: 1.3rem; margin-bottom: 8px; }
+    .service-desc { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; }
+    .service-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; color: var(--warm-orange); font-weight: 800; font-size: 0.88rem; text-decoration: none; transition: gap 0.2s; }
+    .service-link:hover { gap: 10px; }
+
+    /* ===== ABOUT / DOCTOR ===== */
+    #about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-visual { position: relative; }
+    .about-img-wrap {
+      background: var(--blush); border-radius: 40px 40px 40px 10px;
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      font-size: 7rem; position: relative; overflow: hidden;
+    }
+    .about-img-wrap::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,183,93,0.3) 0%, transparent 60%);
+    }
+    .about-badge {
+      position: absolute; bottom: -16px; right: -16px;
+      background: var(--teal); color: white; border-radius: 20px;
+      padding: 14px 22px; font-family: 'Baloo 2', cursive; font-size: 1rem;
+      box-shadow: 0 8px 24px rgba(38,166,154,0.4);
+    }
+    .about-badge span { font-size: 1.8rem; display: block; }
+    .about-dots { position: absolute; top: -20px; left: -20px; }
+    .doctor-card {
+      background: white; border-radius: 20px; padding: 24px;
+      box-shadow: 0 8px 30px rgba(255,112,67,0.1); border: 2px solid var(--blush);
+      display: flex; align-items: center; gap: 16px; margin-top: 32px;
+    }
+    .doctor-avatar {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blush), var(--soft-orange));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; flex-shrink: 0;
+    }
+    .doctor-name { font-family: 'Baloo 2', cursive; font-size: 1.1rem; color: var(--text); }
+    .doctor-title { font-size: 0.82rem; color: var(--teal); font-weight: 700; }
+    .about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+    .about-feature { display: flex; align-items: flex-start; gap: 12px; }
+    .feature-icon { width: 38px; height: 38px; border-radius: 12px; background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .feature-text h4 { font-weight: 800; font-size: 0.88rem; margin-bottom: 2px; }
+    .feature-text p { font-size: 0.78rem; color: var(--text-light); }
+
+    /* ===== TESTIMONIALS ===== */
+    #testimonials { background: linear-gradient(135deg, #FFF3E0 0%, #E0F2F1 100%); text-align: center; overflow: hidden; }
+    .testimonials-header { margin-bottom: 52px; }
+    .testimonials-header .section-sub { margin: 0 auto; }
+    .testimonials-track { overflow: hidden; }
+    .testimonials-slider { display: flex; gap: 22px; animation: slide 22s linear infinite; width: max-content; }
+    @keyframes slide { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .testimonials-track:hover .testimonials-slider { animation-play-state: paused; }
+    .testimonial-card {
+      background: white; border-radius: 22px; padding: 28px;
+      min-width: 300px; max-width: 300px; text-align: left;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: relative;
+    }
+    .testimonial-card::before {
+      content: '"'; font-family: 'Baloo 2', cursive; font-size: 5rem;
+      color: var(--blush); position: absolute; top: -10px; left: 18px; line-height: 1;
+    }
+    .testimonial-text { font-size: 0.9rem; line-height: 1.7; color: var(--text-light); margin: 18px 0; }
+    .testimonial-author { display: flex; align-items: center; gap: 10px; }
+    .author-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+    .author-name { font-weight: 800; font-size: 0.88rem; }
+    .author-pet { font-size: 0.78rem; color: var(--text-light); }
+    .stars { color: var(--soft-orange); font-size: 0.88rem; }
+
+    /* ===== CONTACT ===== */
+    #contact { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; background: white; }
+    .contact-info h2 { font-family: 'Baloo 2', cursive; font-size: 2.4rem; margin-bottom: 14px; }
+    .contact-info > p { color: var(--text-light); line-height: 1.7; margin-bottom: 32px; }
+    .contact-items { display: flex; flex-direction: column; gap: 18px; }
+    .contact-map { margin-top: 28px; border-radius: 18px; overflow: hidden; border: 2px solid var(--blush); }
+    .contact-map iframe { display: block; width: 100%; height: 220px; border: 0; }
+    .contact-item { display: flex; align-items: flex-start; gap: 14px; }
+    .contact-item-icon { width: 46px; height: 46px; border-radius: 14px; background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .contact-item-text h4 { font-weight: 800; font-size: 0.88rem; margin-bottom: 2px; }
+    .contact-item-text p { font-size: 0.88rem; color: var(--text-light); }
+    .contact-item-text a { color: var(--warm-orange); text-decoration: none; font-weight: 700; }
+    .contact-item-text a:hover { text-decoration: underline; }
+    .contact-form { background: var(--cream); border-radius: 26px; padding: 40px; border: 2px solid var(--blush); }
+    .contact-form h3 { font-family: 'Baloo 2', cursive; font-size: 1.5rem; margin-bottom: 26px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 700; font-size: 0.83rem; margin-bottom: 7px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 13px 16px; border: 2px solid var(--blush);
+      border-radius: 13px; font-family: 'Nunito', sans-serif; font-size: 0.92rem;
+      background: white; color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--warm-orange); box-shadow: 0 0 0 4px rgba(255,112,67,0.1);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--text); color: rgba(255,255,255,0.65);
+      padding: 44px 60px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo { font-family: 'Baloo 2', cursive; font-size: 1.4rem; color: white; display: flex; align-items: center; gap: 10px; }
+    .footer-text { font-size: 0.82rem; }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--soft-orange); }
+    .pawprint { position: absolute; opacity: 0.07; pointer-events: none; font-size: 1.3rem; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--warm-orange); }
+
+    /* ===== GALLERY ===== */
+    .gallery-header { text-align: center; margin-bottom: 52px; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 230px;
+      gap: 14px;
+    }
+    .gallery-item:nth-child(1),
+    .gallery-item:nth-child(6) { grid-column: span 2; }
+    .gallery-item {
+      overflow: hidden; border-radius: 18px; cursor: pointer;
+      position: relative; background: var(--blush);
+    }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.45s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.07); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(62,39,35,0.72) 0%, transparent 55%);
+      display: flex; align-items: flex-end; padding: 18px;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span {
+      color: white; font-family: 'Baloo 2', cursive;
+      font-weight: 700; font-size: 0.9rem;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .lightbox.open { opacity: 1; pointer-events: auto; }
+    .lightbox-img {
+      max-width: 90vw; max-height: 88vh;
+      border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      font-size: 1.4rem; width: 44px; height: 44px; border-radius: 50%;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.3); }
+
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      #hero, #about, #contact { grid-template-columns: 1fr; padding: 100px 20px 60px; gap: 36px; }
+      section { padding: 60px 20px; }
+      h1 { font-size: 2.6rem; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+      .gallery-item:nth-child(1),
+      .gallery-item:nth-child(6) { grid-column: span 2; }
+    }
+    @media (max-width: 580px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .about-features { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 200px; }
+      .gallery-item:nth-child(1),
+      .gallery-item:nth-child(6) { grid-column: span 1; }
+    }
+
+    /* ===== ZALO FLOATING BUTTON ===== */
+    .zalo-float {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #0068ff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,104,255,0.45);
+      text-decoration: none; z-index: 9999;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .zalo-float:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(0,104,255,0.6); }
+    .zalo-float svg { width: 34px; height: 34px; }
+    .zalo-pulse {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: rgba(0,104,255,0.3); z-index: 9998;
+      animation: zaloP 2s ease-out infinite;
+    }
+    @keyframes zaloP {
+      0%   { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .zalo-tooltip {
+      position: absolute; right: 68px; top: 50%; transform: translateY(-50%);
+      background: #333; color: white;
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 0.78rem; font-family: 'Nunito', sans-serif; font-weight: 700;
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .zalo-tooltip::after {
+      content: ''; position: absolute; right: -5px; top: 50%; transform: translateY(-50%);
+      border: 5px solid transparent; border-right: none; border-left-color: #333;
+    }
+    .zalo-float:hover .zalo-tooltip { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+  <a class="logo" href="#">
+    <div class="logo-paw">🐾</div>
+    <span data-vi="PKTY Huỳnh Như" data-en="Huynh Nhu Vet">PKTY Huỳnh Như</span>
+  </a>
+
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#services" data-vi="Dịch Vụ" data-en="Services">Dịch Vụ</a></li>
+      <li><a href="#about" data-vi="Về Chúng Tôi" data-en="About Us">Về Chúng Tôi</a></li>
+      <li><a href="#testimonials" data-vi="Đánh Giá" data-en="Reviews">Đánh Giá</a></li>
+      <li><a href="#gallery" data-vi="Hình Ảnh" data-en="Gallery">Hình Ảnh</a></li>
+      <li><a href="#contact" data-vi="Liên Hệ" data-en="Contact">Liên Hệ</a></li>
+      <li><a href="#contact" class="nav-cta" data-vi="📅 Đặt Lịch" data-en="📅 Book Now">📅 Đặt Lịch</a></li>
+    </ul>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="vi">🇻🇳 VI</button>
+      <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-bg-blob blob1"></div>
+  <div class="hero-bg-blob blob2"></div>
+  <div class="hero-bg-blob blob3"></div>
+  <span class="pawprint" style="top:15%;left:6%">🐾</span>
+  <span class="pawprint" style="top:68%;left:44%">🐾</span>
+  <span class="pawprint" style="top:28%;right:8%">🐾</span>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="dot"></div>
+      <span data-vi="Đang nhận bệnh nhân mới" data-en="Now accepting new patients">Đang nhận bệnh nhân mới</span>
+    </div>
+    <h1>
+      <span data-vi="Nơi Mỗi <span>Chú Thú Cưng</span> Được Yêu Thương 🐶🐱"
+            data-en="Where Every <span>Paw</span> Gets the Love It Deserves 🐶🐱">
+        Nơi Mỗi <span>Chú Thú Cưng</span> Được Yêu Thương 🐶🐱
+      </span>
+    </h1>
+    <p class="hero-desc"
+       data-vi="Phòng khám thú y tận tâm dành cho chó và mèo. Từ khám định kỳ đến điều trị chuyên sâu — chúng tôi chăm sóc gia đình lông xù của bạn như người thân."
+       data-en="Compassionate veterinary care for your dogs and cats. From routine checkups to specialized treatments — we treat your fur family like our own.">
+      Phòng khám thú y tận tâm dành cho chó và mèo. Từ khám định kỳ đến điều trị chuyên sâu — chúng tôi chăm sóc gia đình lông xù của bạn như người thân.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary" data-vi="📅 Đặt Lịch Khám" data-en="📅 Book Appointment">📅 Đặt Lịch Khám</a>
+      <a href="#services" class="btn-secondary" data-vi="Xem Dịch Vụ →" data-en="Our Services →">Xem Dịch Vụ →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num" data-count="500">0</div>
+        <div class="stat-label" data-vi="Thú Cưng Hạnh Phúc" data-en="Happy Pets">Thú Cưng Hạnh Phúc</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="5">0</div>
+        <div class="stat-label" data-vi="Năm Kinh Nghiệm" data-en="Years Experience">Năm Kinh Nghiệm</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="98">0</div>
+        <div class="stat-label" data-vi="% Hài Lòng" data-en="% Satisfaction">% Hài Lòng</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-illustration">
+    <div class="hero-card">
+      <div class="floating-pill pill-1">✅ <span data-vi="Bác Sĩ Có Chứng Chỉ" data-en="Certified Vets">Bác Sĩ Có Chứng Chỉ</span></div>
+      <div class="floating-pill pill-2">❤️ <span data-vi="Chăm Sóc Tận Tâm" data-en="Trusted Care">Chăm Sóc Tận Tâm</span></div>
+      <div class="floating-pill pill-3">🏥 <span data-vi="Thiết Bị Hiện Đại" data-en="Modern Equipment">Thiết Bị Hiện Đại</span></div>
+
+      <div class="animal-illustration">
+        <svg class="dog-svg" width="170" height="190" viewBox="0 0 200 220" fill="none">
+          <!-- Fluffy tail (behind body) -->
+          <path d="M152 140 Q185 110 178 80 Q175 65 165 72 Q172 95 158 118 Z" fill="#E8A830"/>
+          <path d="M155 138 Q183 112 177 84 Q175 70 167 76 Q173 97 160 120 Z" fill="#F5C043"/>
+
+          <!-- Body - fluffy golden -->
+          <ellipse cx="100" cy="148" rx="58" ry="48" fill="#E8A830"/>
+          <!-- Chest fur lighter -->
+          <ellipse cx="100" cy="155" rx="36" ry="32" fill="#F5C043"/>
+          <!-- Body fur texture -->
+          <path d="M55 130 Q50 118 58 112" stroke="#D4922A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M145 130 Q150 118 142 112" stroke="#D4922A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M65 148 Q60 136 66 128" stroke="#D4922A" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M135 148 Q140 136 134 128" stroke="#D4922A" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- Head - round golden -->
+          <circle cx="100" cy="80" r="40" fill="#E8A830"/>
+          <!-- Forehead fluff lighter -->
+          <ellipse cx="100" cy="62" rx="28" ry="18" fill="#F5C043"/>
+
+          <!-- Long floppy ears - Golden Retriever characteristic -->
+          <!-- Left ear -->
+          <path d="M62 58 Q42 52 36 80 Q32 100 45 112 Q55 118 65 108 Q58 90 62 70 Z" fill="#C47820"/>
+          <path d="M62 58 Q44 54 40 78 Q37 96 48 108 Q55 114 63 106 Q57 88 62 68 Z" fill="#D4922A"/>
+          <!-- Right ear -->
+          <path d="M138 58 Q158 52 164 80 Q168 100 155 112 Q145 118 135 108 Q142 90 138 70 Z" fill="#C47820"/>
+          <path d="M138 58 Q156 54 160 78 Q163 96 152 108 Q145 114 137 106 Q143 88 138 68 Z" fill="#D4922A"/>
+
+          <!-- Eyes - warm brown, expressive -->
+          <circle cx="87" cy="74" r="9" fill="white"/>
+          <circle cx="113" cy="74" r="9" fill="white"/>
+          <circle cx="88" cy="75" r="6" fill="#4A2C0A"/>
+          <circle cx="114" cy="75" r="6" fill="#4A2C0A"/>
+          <!-- Pupil shine -->
+          <circle cx="90" cy="73" r="2" fill="white"/>
+          <circle cx="116" cy="73" r="2" fill="white"/>
+          <!-- Small bottom shine -->
+          <circle cx="87" cy="78" r="1" fill="white" opacity="0.6"/>
+          <circle cx="113" cy="78" r="1" fill="white" opacity="0.6"/>
+
+          <!-- Eyebrows - expressive Golden style -->
+          <path d="M81 65 Q87 62 93 65" stroke="#8B5E1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M107 65 Q113 62 119 65" stroke="#8B5E1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+          <!-- Muzzle - wide, light colored -->
+          <ellipse cx="100" cy="91" rx="22" ry="16" fill="#F5C043"/>
+          <ellipse cx="100" cy="88" rx="18" ry="12" fill="#FADA7A"/>
+
+          <!-- Nose - big black -->
+          <ellipse cx="100" cy="86" rx="10" ry="7" fill="#1A0A00"/>
+          <ellipse cx="97" cy="84" rx="3.5" ry="2.5" fill="#3D2010" opacity="0.7"/>
+          <!-- Nose shine -->
+          <ellipse cx="103" cy="83" rx="2" ry="1.5" fill="white" opacity="0.4"/>
+
+          <!-- Big Golden Retriever smile + tongue -->
+          <path d="M86 95 Q100 105 114 95" stroke="#8B3A2A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Tongue -->
+          <ellipse cx="100" cy="106" rx="9" ry="7" fill="#E05A4A"/>
+          <ellipse cx="100" cy="107" rx="8.5" ry="6.5" fill="#E8685A"/>
+          <path d="M100 101 L100 112" stroke="#C04030" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Legs - fluffy -->
+          <rect x="62" y="175" width="24" height="35" rx="12" fill="#E8A830"/>
+          <rect x="114" y="175" width="24" height="35" rx="12" fill="#E8A830"/>
+          <!-- Front legs lighter -->
+          <rect x="55" y="160" width="22" height="33" rx="11" fill="#D4922A"/>
+          <rect x="123" y="160" width="22" height="33" rx="11" fill="#D4922A"/>
+          <!-- Paw details -->
+          <ellipse cx="66" cy="193" rx="11" ry="6" fill="#C47820"/>
+          <ellipse cx="134" cy="193" rx="11" ry="6" fill="#C47820"/>
+
+          <!-- Collar - orange with tag -->
+          <rect x="70" y="112" width="60" height="11" rx="5.5" fill="#FF7043"/>
+          <circle cx="100" cy="123" r="6" fill="#FFD54F"/>
+          <text x="100" cy="126" text-anchor="middle" font-size="7" fill="#C47820" dy="3" font-weight="bold">B</text>
+
+          <!-- Fur tuft on top of head -->
+          <path d="M88 44 Q100 36 112 44 Q106 50 100 48 Q94 50 88 44Z" fill="#F5C043"/>
+          <path d="M92 42 Q100 34 108 42 Q104 46 100 45 Q96 46 92 42Z" fill="#FADA7A"/>
+        </svg>
+      </div>
+
+      <div style="text-align:center;">
+        <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--text);margin-bottom:8px;">
+          <span data-vi="Buddy đang khỏe mạnh! 🎉" data-en="Buddy is feeling great! 🎉">Buddy đang khỏe mạnh! 🎉</span>
+        </div>
+        <div style="background:var(--cream);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.4rem;">💉</span>
+          <div style="text-align:left;">
+            <div style="font-weight:800;font-size:0.82rem;" data-vi="Lịch Tiêm Tiếp Theo" data-en="Next Vaccine Due">Lịch Tiêm Tiếp Theo</div>
+            <div style="font-size:0.78rem;color:var(--teal);font-weight:700;">Tháng 3, 2025</div>
+          </div>
+          <div style="margin-left:auto;background:var(--teal);color:white;padding:3px 10px;border-radius:99px;font-size:0.72rem;font-weight:800;" data-vi="Đúng lịch ✓" data-en="On Track ✓">Đúng lịch ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section id="services">
+  <div class="services-header">
+    <div class="section-tag" data-vi="Dịch Vụ Của Chúng Tôi" data-en="What We Do">Dịch Vụ Của Chúng Tôi</div>
+    <h2 class="section-title">
+      <span data-vi="Mọi Thứ Thú Cưng Của Bạn <span style='color:var(--warm-orange)'>Cần</span>"
+            data-en="Everything Your Pet <span style='color:var(--warm-orange)'>Needs</span>">
+        Mọi Thứ Thú Cưng Của Bạn <span style="color:var(--warm-orange)">Cần</span>
+      </span>
+    </h2>
+    <p class="section-sub"
+       data-vi="Từ khám sức khỏe định kỳ đến chăm sóc y tế chuyên sâu — chúng tôi bao trọn mọi nhu cầu của thú cưng bạn với tình yêu và chuyên môn."
+       data-en="From routine wellness visits to complex medical care — we've got your furry friends covered with love and expertise.">
+      Từ khám sức khỏe định kỳ đến chăm sóc y tế chuyên sâu — chúng tôi bao trọn mọi nhu cầu của thú cưng bạn với tình yêu và chuyên môn.
+    </p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="service-icon">🩺</span>
+      <div class="service-title" data-vi="Khám Sức Khỏe Tổng Quát" data-en="General Checkups">Khám Sức Khỏe Tổng Quát</div>
+      <p class="service-desc" data-vi="Khám toàn diện từ đầu đến chân để giữ cho thú cưng của bạn luôn khỏe mạnh quanh năm." data-en="Comprehensive wellness exams to keep your pet healthy year-round. We check everything from nose to tail.">Khám toàn diện từ đầu đến chân để giữ cho thú cưng của bạn luôn khỏe mạnh quanh năm.</p>
+      <a href="#contact" class="service-link" data-vi="Tìm hiểu thêm →" data-en="Learn more →">Tìm hiểu thêm →</a>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">💉</span>
+      <div class="service-title" data-vi="Tiêm Phòng Vắc-xin" data-en="Vaccinations">Tiêm Phòng Vắc-xin</div>
+      <p class="service-desc" data-vi="Các loại vắc-xin phù hợp theo độ tuổi, giống loài và môi trường sống của thú cưng. Luôn được bảo vệ an toàn." data-en="Core and lifestyle vaccines tailored to your pet's age, breed, and risk factors. Stay protected always.">Các loại vắc-xin phù hợp theo độ tuổi, giống loài và môi trường sống của thú cưng. Luôn được bảo vệ an toàn.</p>
+      <a href="#contact" class="service-link" data-vi="Tìm hiểu thêm →" data-en="Learn more →">Tìm hiểu thêm →</a>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🦷</span>
+      <div class="service-title" data-vi="Chăm Sóc Răng Miệng" data-en="Dental Care">Chăm Sóc Răng Miệng</div>
+      <p class="service-desc" data-vi="Vệ sinh răng chuyên nghiệp và theo dõi sức khỏe răng miệng. Răng sạch, miệng thơm, nụ cười rạng rỡ!" data-en="Professional cleaning and dental health monitoring. Healthy teeth, happy smiles, fresh breath!">Vệ sinh răng chuyên nghiệp và theo dõi sức khỏe răng miệng. Răng sạch, miệng thơm, nụ cười rạng rỡ!</p>
+      <a href="#contact" class="service-link" data-vi="Tìm hiểu thêm →" data-en="Learn more →">Tìm hiểu thêm →</a>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🔬</span>
+      <div class="service-title" data-vi="Xét Nghiệm & Chẩn Đoán" data-en="Lab & Diagnostics">Xét Nghiệm & Chẩn Đoán</div>
+      <p class="service-desc" data-vi="Xét nghiệm máu, nước tiểu, siêu âm và các chẩn đoán nhanh để có kết quả chính xác kịp thời." data-en="In-house blood panels, urinalysis, imaging and rapid diagnostics for fast, accurate answers.">Xét nghiệm máu, nước tiểu, siêu âm và các chẩn đoán nhanh để có kết quả chính xác kịp thời.</p>
+      <a href="#contact" class="service-link" data-vi="Tìm hiểu thêm →" data-en="Learn more →">Tìm hiểu thêm →</a>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🏥</span>
+      <div class="service-title" data-vi="Phẫu Thuật" data-en="Surgery">Phẫu Thuật</div>
+      <p class="service-desc" data-vi="Các ca phẫu thuật thông thường và chuyên biệt được thực hiện trong môi trường vô trùng đạt chuẩn." data-en="Routine and specialized surgical procedures performed in a sterile, fully equipped environment.">Các ca phẫu thuật thông thường và chuyên biệt được thực hiện trong môi trường vô trùng đạt chuẩn.</p>
+      <a href="#contact" class="service-link" data-vi="Tìm hiểu thêm →" data-en="Learn more →">Tìm hiểu thêm →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="about-visual">
+    <svg class="about-dots" width="70" height="70" viewBox="0 0 70 70">
+      <circle cx="10" cy="10" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="30" cy="10" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="50" cy="10" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="10" cy="30" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="30" cy="30" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="50" cy="30" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="10" cy="50" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="30" cy="50" r="4" fill="var(--blush)" opacity="0.9"/>
+      <circle cx="50" cy="50" r="4" fill="var(--blush)" opacity="0.9"/>
+    </svg>
+    <div class="about-img-wrap">
+      <span style="position:relative;z-index:1;animation:float 4s ease-in-out infinite;">🐾</span>
+    </div>
+    <div class="about-badge">
+      <span>5+</span>
+      <span data-vi="Năm Kinh Nghiệm" data-en="Years of Care">Năm Kinh Nghiệm</span>
+    </div>
+  </div>
+
+  <div class="about-content">
+    <div class="section-tag" data-vi="Câu Chuyện Của Chúng Tôi" data-en="Our Story">Câu Chuyện Của Chúng Tôi</div>
+    <h2 class="section-title">
+      <span data-vi="Phòng Khám Được Xây Dựng <span style='color:var(--warm-orange)'>Bằng Tình Yêu</span>"
+            data-en="A Clinic Built <span style='color:var(--warm-orange)'>With Love</span>">
+        Phòng Khám Được Xây Dựng <span style="color:var(--warm-orange)">Bằng Tình Yêu</span>
+      </span>
+    </h2>
+    <p class="section-sub" style="max-width:100%;"
+       data-vi="PKTY Huỳnh Như được thành lập với một niềm tin đơn giản: mỗi thú cưng đều xứng đáng được đối xử như người thân trong gia đình. Đội ngũ bác sĩ và nhân viên của chúng tôi mang đến sự ân cần, kỹ năng và tình yêu thực sự trong từng lần thăm khám."
+       data-en="Huynh Nhu Vet Clinic was built on one simple belief: every pet deserves to be treated like family. Our team of passionate veterinarians and staff bring warmth, skill, and genuine love to every visit.">
+      PKTY Huỳnh Như được thành lập với một niềm tin đơn giản: mỗi thú cưng đều xứng đáng được đối xử như người thân trong gia đình. Đội ngũ bác sĩ và nhân viên của chúng tôi mang đến sự ân cần, kỹ năng và tình yêu thực sự trong từng lần thăm khám.
+    </p>
+
+    <!-- Doctor card -->
+    <div class="doctor-card">
+      <div class="doctor-avatar">👩‍⚕️</div>
+      <div>
+        <div class="doctor-name" data-vi="BSTY Trần Thị Huỳnh Như" data-en="Dr. Tran Thi Huynh Nhu">BSTY Trần Thị Huỳnh Như</div>
+        <div class="doctor-title" data-vi="Bác Sĩ Thú Y Phụ Trách" data-en="Lead Veterinarian">Bác Sĩ Thú Y Phụ Trách</div>
+      </div>
+    </div>
+
+    <div class="about-features">
+      <div class="about-feature">
+        <div class="feature-icon">👩‍⚕️</div>
+        <div class="feature-text">
+          <h4 data-vi="Đội Ngũ Chuyên Nghiệp" data-en="Expert Team">Đội Ngũ Chuyên Nghiệp</h4>
+          <p data-vi="Bác sĩ thú y được đào tạo bài bản và giàu kinh nghiệm" data-en="Trained vets with years of hands-on experience">Bác sĩ thú y được đào tạo bài bản và giàu kinh nghiệm</p>
+        </div>
+      </div>
+      <div class="about-feature">
+        <div class="feature-icon">🏠</div>
+        <div class="feature-text">
+          <h4 data-vi="Không Gian Thân Thiện" data-en="Stress-Free Space">Không Gian Thân Thiện</h4>
+          <p data-vi="Môi trường yên tĩnh, thoải mái, giảm căng thẳng cho thú cưng" data-en="Calm, welcoming spaces designed for anxious pets">Môi trường yên tĩnh, thoải mái, giảm căng thẳng cho thú cưng</p>
+        </div>
+      </div>
+      <div class="about-feature">
+        <div class="feature-icon">⏰</div>
+        <div class="feature-text">
+          <h4 data-vi="Giờ Làm Việc Linh Hoạt" data-en="Flexible Hours">Giờ Làm Việc Linh Hoạt</h4>
+          <p data-vi="Mở cửa 7 ngày một tuần theo nhu cầu của bạn" data-en="Open 7 days a week to fit your schedule">Mở cửa 7 ngày một tuần theo nhu cầu của bạn</p>
+        </div>
+      </div>
+      <div class="about-feature">
+        <div class="feature-icon">💬</div>
+        <div class="feature-text">
+          <h4 data-vi="Luôn Hỗ Trợ Bạn" data-en="Always Reachable">Luôn Hỗ Trợ Bạn</h4>
+          <p data-vi="Có thể liên hệ nhanh qua điện thoại hoặc nhắn tin" data-en="Reachable by call or message for urgent concerns">Có thể liên hệ nhanh qua điện thoại hoặc nhắn tin</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <a href="#contact" class="btn-primary" data-vi="Gặp Bác Sĩ Của Chúng Tôi 🐾" data-en="Meet Our Team 🐾">Gặp Bác Sĩ Của Chúng Tôi 🐾</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section id="testimonials">
+  <div class="testimonials-header">
+    <div class="section-tag" data-vi="Gia Đình Hài Lòng" data-en="Happy Families">Gia Đình Hài Lòng</div>
+    <h2 class="section-title">
+      <span data-vi="Khách Hàng Nói Gì Về <span style='color:var(--warm-orange)'>Chúng Tôi</span>"
+            data-en="What Pet Parents <span style='color:var(--warm-orange)'>Are Saying</span>">
+        Khách Hàng Nói Gì Về <span style="color:var(--warm-orange)">Chúng Tôi</span>
+      </span>
+    </h2>
+    <p class="section-sub"
+       data-vi="Những câu chuyện thật từ những gia đình đã tin tưởng chúng tôi chăm sóc những người bạn thân thương nhất của họ."
+       data-en="Real stories from real pet families who trust us with their most beloved companions.">
+      Những câu chuyện thật từ những gia đình đã tin tưởng chúng tôi chăm sóc những người bạn thân thương nhất của họ.
+    </p>
+  </div>
+
+  <div class="testimonials-track">
+    <div class="testimonials-slider">
+      <!-- Real Google Reviews - Vietnamese -->
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Chị làm rất tận tâm và chuyên nghiệp</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F0FE;color:#4285F4;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">G</div>
+          <div><div class="author-name">Giao Trần Phương</div><div class="author-pet">⭐ Google Review · 4 năm trước</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Bs chữa bệnh tốt giá cả hợp lý</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#FCE4EC;color:#E91E63;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">H</div>
+          <div><div class="author-name">Ho Nguyen Thuy Dung</div><div class="author-pet">⭐ Google Review · 2 năm trước</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Chị bác sĩ rất nhiệt tình, vui vẻ, tay nghề tốt lắm luôn</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F5E9;color:#43A047;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">N</div>
+          <div><div class="author-name">Nguyễn Châu</div><div class="author-pet">⭐ Google Review · 2 năm trước</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Bác sĩ chẩn đoán đúng bệnh cho con nhà mình, mình đi những chỗ # họ bày vẽ, chữa k hết, tốn tiền nhiều nay may mắn gặp bs Như con mình đã khỏe hơn. Gặp Bs hơi khó nên gọi hẹn đặt lịch trước nha mn</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#EDE7F6;color:#7E57C2;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">M</div>
+          <div><div class="author-name">Minh Long</div><div class="author-pet">⭐ Google Review · 2 năm trước</div></div>
+        </div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Chị làm rất tận tâm và chuyên nghiệp</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F0FE;color:#4285F4;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">G</div>
+          <div><div class="author-name">Giao Trần Phương</div><div class="author-pet">⭐ Google Review · 4 năm trước</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Bs chữa bệnh tốt giá cả hợp lý</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#FCE4EC;color:#E91E63;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">H</div>
+          <div><div class="author-name">Ho Nguyen Thuy Dung</div><div class="author-pet">⭐ Google Review · 2 năm trước</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Chị bác sĩ rất nhiệt tình, vui vẻ, tay nghề tốt lắm luôn</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F5E9;color:#43A047;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">N</div>
+          <div><div class="author-name">Nguyễn Châu</div><div class="author-pet">⭐ Google Review · 2 năm trước</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="vi">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Bác sĩ chẩn đoán đúng bệnh cho con nhà mình, mình đi những chỗ # họ bày vẽ, chữa k hết, tốn tiền nhiều nay may mắn gặp bs Như con mình đã khỏe hơn. Gặp Bs hơi khó nên gọi hẹn đặt lịch trước nha mn</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#EDE7F6;color:#7E57C2;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">M</div>
+          <div><div class="author-name">Minh Long</div><div class="author-pet">⭐ Google Review · 2 năm trước</div></div>
+        </div>
+      </div>
+
+      <!-- English translations (shown when EN) -->
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">The doctor is very dedicated and professional.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F0FE;color:#4285F4;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">G</div>
+          <div><div class="author-name">Giao Tran Phuong</div><div class="author-pet">⭐ Google Review · 4 years ago</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">The vet treats pets well and the prices are very reasonable.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#FCE4EC;color:#E91E63;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">H</div>
+          <div><div class="author-name">Ho Nguyen Thuy Dung</div><div class="author-pet">⭐ Google Review · 2 years ago</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">The doctor is very enthusiastic, cheerful, and highly skilled!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F5E9;color:#43A047;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">N</div>
+          <div><div class="author-name">Nguyen Chau</div><div class="author-pet">⭐ Google Review · 2 years ago</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Dr. Nhu diagnosed my pet correctly after other clinics failed. My pet is much healthier now. She can be hard to reach so I recommend booking an appointment in advance!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#EDE7F6;color:#7E57C2;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">M</div>
+          <div><div class="author-name">Minh Long</div><div class="author-pet">⭐ Google Review · 2 years ago</div></div>
+        </div>
+      </div>
+      <!-- Duplicate EN for loop -->
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">The doctor is very dedicated and professional.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F0FE;color:#4285F4;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">G</div>
+          <div><div class="author-name">Giao Tran Phuong</div><div class="author-pet">⭐ Google Review · 4 years ago</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">The vet treats pets well and the prices are very reasonable.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#FCE4EC;color:#E91E63;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">H</div>
+          <div><div class="author-name">Ho Nguyen Thuy Dung</div><div class="author-pet">⭐ Google Review · 2 years ago</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">The doctor is very enthusiastic, cheerful, and highly skilled!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8F5E9;color:#43A047;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">N</div>
+          <div><div class="author-name">Nguyen Chau</div><div class="author-pet">⭐ Google Review · 2 years ago</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-lang-card="en" style="display:none">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Dr. Nhu diagnosed my pet correctly after other clinics failed. My pet is much healthier now. She can be hard to reach so I recommend booking an appointment in advance!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#EDE7F6;color:#7E57C2;font-weight:800;font-size:1rem;font-family:'Baloo 2',cursive;">M</div>
+          <div><div class="author-name">Minh Long</div><div class="author-pet">⭐ Google Review · 2 years ago</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section id="gallery">
+  <div class="gallery-header">
+    <div class="section-tag" data-vi="Hình Ảnh Phòng Khám" data-en="Clinic Gallery">Hình Ảnh Phòng Khám</div>
+    <h2 class="section-title">
+      <span data-vi="Không Gian <span style='color:var(--warm-orange)'>Của Chúng Tôi 🏥</span>"
+            data-en="A Peek Inside <span style='color:var(--warm-orange)'>Our Clinic 🏥</span>">
+        Không Gian <span style="color:var(--warm-orange)">Của Chúng Tôi 🏥</span>
+      </span>
+    </h2>
+    <p class="section-sub" style="margin:0 auto;"
+       data-vi="Một cái nhìn vào không gian ấm cúng — nơi thú cưng luôn được chào đón và chăm sóc tận tình."
+       data-en="A look inside our cozy space — where every pet is welcomed and cared for with love.">
+      Một cái nhìn vào không gian ấm cúng — nơi thú cưng luôn được chào đón và chăm sóc tận tình.
+    </p>
+  </div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/vet-rx/800/460" alt="Khu vực tiếp tân" loading="lazy">
+      <div class="gallery-overlay">
+        <span data-vi="Khu Vực Tiếp Tân" data-en="Reception Area">Khu Vực Tiếp Tân</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/vet-dog1/460/460" alt="Khám chó" loading="lazy">
+      <div class="gallery-overlay">
+        <span data-vi="Bé Cún Đáng Yêu" data-en="Happy Pups">Bé Cún Đáng Yêu</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/vet-cat1/460/460" alt="Khám mèo" loading="lazy">
+      <div class="gallery-overlay">
+        <span data-vi="Bé Mèo Tinh Nghịch" data-en="Playful Kittens">Bé Mèo Tinh Nghịch</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/vet-vax/460/460" alt="Tiêm phòng" loading="lazy">
+      <div class="gallery-overlay">
+        <span data-vi="Tiêm Phòng Vắc-xin" data-en="Vaccinations">Tiêm Phòng Vắc-xin</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/vet-check/460/460" alt="Khám tổng quát" loading="lazy">
+      <div class="gallery-overlay">
+        <span data-vi="Khám Sức Khỏe" data-en="Health Checkup">Khám Sức Khỏe</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/vet-team/800/460" alt="Đội ngũ phòng khám" loading="lazy">
+      <div class="gallery-overlay">
+        <span data-vi="Đội Ngũ Tận Tâm" data-en="Our Caring Team">Đội Ngũ Tận Tâm</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="contact-info">
+    <div class="section-tag" data-vi="Liên Hệ Với Chúng Tôi" data-en="Get In Touch">Liên Hệ Với Chúng Tôi</div>
+    <h2>
+      <span data-vi="Đặt Lịch Khám <span style='color:var(--warm-orange)'>Ngay Hôm Nay 🐾</span>"
+            data-en="Book Your Visit <span style='color:var(--warm-orange)'>Today 🐾</span>">
+        Đặt Lịch Khám <span style="color:var(--warm-orange)">Ngay Hôm Nay 🐾</span>
+      </span>
+    </h2>
+    <p data-vi="Chúng tôi rất mong được gặp thú cưng của bạn! Điền form hoặc liên hệ qua các kênh bên dưới."
+       data-en="We'd love to meet your furry friend! Fill out the form or reach us through any of the channels below.">
+      Chúng tôi rất mong được gặp thú cưng của bạn! Điền form hoặc liên hệ qua các kênh bên dưới.
+    </p>
+
+    <div class="contact-items">
+      <div class="contact-item">
+        <div class="contact-item-icon">📍</div>
+        <div class="contact-item-text">
+          <h4 data-vi="Địa Chỉ" data-en="Address">Địa Chỉ</h4>
+          <p>138 Hà Duy Phiên, xã Bình Mỹ, Thành phố Hồ Chí Minh</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📞</div>
+        <div class="contact-item-text">
+          <h4 data-vi="Điện Thoại" data-en="Phone">Điện Thoại</h4>
+          <p><a href="tel:0961291597">0961 291 597</a></p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">👩‍⚕️</div>
+        <div class="contact-item-text">
+          <h4 data-vi="Bác Sĩ Phụ Trách" data-en="Lead Doctor">Bác Sĩ Phụ Trách</h4>
+          <p data-vi="BSTY Trần Thị Huỳnh Như" data-en="Dr. Tran Thi Huynh Nhu">BSTY Trần Thị Huỳnh Như</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🕐</div>
+        <div class="contact-item-text">
+          <h4 data-vi="Giờ Mở Cửa" data-en="Opening Hours">Giờ Mở Cửa</h4>
+          <p data-vi="Thứ 2 – CN: 8:00 – 20:00" data-en="Mon – Sun: 8:00 AM – 8:00 PM">Thứ 2 – CN: 8:00 – 20:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-map">
+      <iframe
+        src="https://maps.google.com/maps?q=138+Ha+Duy+Phien,+Binh+My,+Ho+Chi+Minh,+Vietnam&output=embed&hl=vi"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="contact-form">
+    <h3 data-vi="Yêu Cầu Đặt Lịch 📅" data-en="Request an Appointment 📅">Yêu Cầu Đặt Lịch 📅</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label data-vi="Họ và Tên" data-en="Your Name">Họ và Tên</label>
+        <input type="text" data-placeholder-vi="VD: Nguyễn Văn A" data-placeholder-en="e.g. John Doe" placeholder="VD: Nguyễn Văn A" />
+      </div>
+      <div class="form-group">
+        <label data-vi="Số Điện Thoại" data-en="Phone Number">Số Điện Thoại</label>
+        <input type="tel" placeholder="0961 291 597" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label data-vi="Tên Thú Cưng" data-en="Pet's Name">Tên Thú Cưng</label>
+        <input type="text" data-placeholder-vi="VD: Mochi" data-placeholder-en="e.g. Buddy" placeholder="VD: Mochi" />
+      </div>
+      <div class="form-group">
+        <label data-vi="Loại Thú Cưng" data-en="Pet Type">Loại Thú Cưng</label>
+        <select>
+          <option data-vi="🐶 Chó" data-en="🐶 Dog">🐶 Chó</option>
+          <option data-vi="🐱 Mèo" data-en="🐱 Cat">🐱 Mèo</option>
+          <option data-vi="🐰 Khác" data-en="🐰 Other">🐰 Khác</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label data-vi="Dịch Vụ Cần" data-en="Service Needed">Dịch Vụ Cần</label>
+      <select>
+        <option data-vi="Khám Tổng Quát" data-en="General Checkup">Khám Tổng Quát</option>
+        <option data-vi="Tiêm Phòng" data-en="Vaccination">Tiêm Phòng</option>
+        <option data-vi="Chăm Sóc Răng Miệng" data-en="Dental Care">Chăm Sóc Răng Miệng</option>
+        <option data-vi="Tư Vấn Phẫu Thuật" data-en="Surgery Consultation">Tư Vấn Phẫu Thuật</option>
+
+        <option data-vi="Cấp Cứu" data-en="Emergency">Cấp Cứu</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label data-vi="Ghi Chú Thêm" data-en="Additional Notes">Ghi Chú Thêm</label>
+      <textarea data-placeholder-vi="Triệu chứng hoặc vấn đề bạn muốn chúng tôi biết..." data-placeholder-en="Any symptoms or concerns we should know about?" placeholder="Triệu chứng hoặc vấn đề bạn muốn chúng tôi biết..."></textarea>
+    </div>
+    <button class="btn-primary" style="width:100%;text-align:center;" data-vi="🐾 Đặt Lịch Khám" data-en="🐾 Book My Appointment">🐾 Đặt Lịch Khám</button>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">
+    <div class="logo-paw" style="width:30px;height:30px;font-size:0.95rem;animation:pawWobble 3s ease-in-out infinite;">🐾</div>
+    <span data-vi="PKTY Huỳnh Như" data-en="Huynh Nhu Vet">PKTY Huỳnh Như</span>
+  </div>
+  <p class="footer-text">
+    <span data-vi="© 2025 PKTY Huỳnh Như · Làm bằng ❤️ cho thú cưng" data-en="© 2025 Huynh Nhu Vet Clinic · Made with ❤️ for pets">© 2025 PKTY Huỳnh Như · Làm bằng ❤️ cho thú cưng</span>
+  </p>
+  <div class="footer-links">
+    <a href="tel:0961291597">📞 0961 291 597</a>
+    <a href="#">Facebook</a>
+    <a href="https://zalo.me/0961291597" target="_blank" rel="noopener noreferrer">Zalo</a>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ===== LANGUAGE SYSTEM ===== */
+  let currentLang = 'vi';
+
+  function switchLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+
+    // Update all [data-vi] / [data-en] elements (text content)
+    document.querySelectorAll('[data-vi]').forEach(el => {
+      // Skip elements that are option tags inside selects (handled separately)
+      if (el.tagName === 'OPTION') {
+        el.textContent = el.getAttribute('data-' + lang) || el.textContent;
+        return;
+      }
+      const text = el.getAttribute('data-' + lang);
+      if (!text) return;
+      // Use innerHTML to support nested spans with inline styles
+      if (text.includes('<')) {
+        el.innerHTML = text;
+      } else {
+        el.textContent = text;
+      }
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-placeholder-vi]').forEach(el => {
+      el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+    });
+
+    // Testimonial cards: show only matching lang
+    document.querySelectorAll('[data-lang-card]').forEach(card => {
+      card.style.display = card.getAttribute('data-lang-card') === lang ? 'block' : 'none';
+    });
+
+    // Lang buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+
+    // Animate lang switcher
+    gsap.fromTo('.lang-switcher', { scale: 0.92 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchLang(btn.getAttribute('data-lang')));
+  });
+
+  /* ===== GSAP ANIMATIONS ===== */
+
+  // Navbar scroll shadow
+  gsap.to('#navbar', {
+    boxShadow: '0 4px 30px rgba(255,112,67,0.12)',
+    scrollTrigger: { trigger: 'body', start: '80px top', toggleActions: 'play none none reverse' }
+  });
+
+  // Hero entrance
+  const heroTl = gsap.timeline({ defaults: { ease: 'back.out(1.4)' } });
+  heroTl
+    .from('#navbar',        { y: -60, opacity: 0, duration: 0.7, ease: 'power2.out' })
+    .from('.hero-badge',    { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
+    .from('h1',             { y: 40, opacity: 0, duration: 0.7 }, '-=0.3')
+    .from('.hero-desc',     { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
+    .from('.hero-actions',  { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
+    .from('.stat-item',     { y: 20, opacity: 0, stagger: 0.12, duration: 0.5 }, '-=0.2')
+    .from('.hero-card',     { x: 80, opacity: 0, scale: 0.9, duration: 0.8, ease: 'back.out(1.6)' }, '-=0.7')
+    .from('.floating-pill', { y: 20, opacity: 0, stagger: 0.15, duration: 0.5, ease: 'back.out(2)' }, '-=0.4');
+
+  // Counters
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.dataset.count);
+    const suffix = target === 98 ? '%+' : '+';
+    gsap.to({ val: 0 }, {
+      val: target, duration: 2, delay: 1.5, ease: 'power2.out',
+      onUpdate: function() { el.textContent = Math.floor(this.targets()[0].val) + suffix; }
+    });
+  });
+
+  // Services
+  gsap.from('.services-header .section-tag, .services-header h2, .services-header p', {
+    y: 30, opacity: 0, stagger: 0.15, duration: 0.7,
+    scrollTrigger: { trigger: '#services', start: 'top 75%' }
+  });
+  gsap.from('.service-card', {
+    y: 50, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'back.out(1.4)',
+    scrollTrigger: { trigger: '.services-grid', start: 'top 80%' }
+  });
+
+  // About
+  gsap.from('.about-visual', {
+    x: -60, opacity: 0, duration: 0.9, ease: 'power3.out',
+    scrollTrigger: { trigger: '#about', start: 'top 70%' }
+  });
+  gsap.from('.about-content > *', {
+    y: 30, opacity: 0, stagger: 0.1, duration: 0.6,
+    scrollTrigger: { trigger: '#about', start: 'top 70%' }
+  });
+
+  // Doctor card pop
+  gsap.from('.doctor-card', {
+    scale: 0.8, opacity: 0, duration: 0.6, ease: 'back.out(2)',
+    scrollTrigger: { trigger: '.doctor-card', start: 'top 85%' }
+  });
+
+  // Testimonials
+  gsap.from('.testimonials-header > *', {
+    y: 30, opacity: 0, stagger: 0.15, duration: 0.7,
+    scrollTrigger: { trigger: '#testimonials', start: 'top 75%' }
+  });
+  gsap.from('.testimonials-track', {
+    y: 40, opacity: 0, duration: 0.8,
+    scrollTrigger: { trigger: '.testimonials-track', start: 'top 85%' }
+  });
+
+  // Contact
+  gsap.from('.contact-info', {
+    x: -50, opacity: 0, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#contact', start: 'top 70%' }
+  });
+  gsap.from('.contact-form', {
+    x: 50, opacity: 0, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#contact', start: 'top 70%' }
+  });
+
+  // Service icon wobble on hover
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      gsap.to(card.querySelector('.service-icon'), { rotation: 15, scale: 1.2, duration: 0.2, ease: 'back.out(3)' });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card.querySelector('.service-icon'), { rotation: 0, scale: 1, duration: 0.3, ease: 'elastic.out(1, 0.5)' });
+    });
+  });
+
+  // Button bounce
+  document.querySelectorAll('.btn-primary').forEach(btn => {
+    btn.addEventListener('mouseenter', () => gsap.to(btn, { scale: 1.04, duration: 0.15 }));
+    btn.addEventListener('mouseleave', () => gsap.to(btn, { scale: 1, duration: 0.3, ease: 'elastic.out(1, 0.5)' }));
+  });
+
+  // Nav link micro-hover
+  document.querySelectorAll('.nav-links a:not(.nav-cta)').forEach(link => {
+    link.addEventListener('mouseenter', () => gsap.to(link, { y: -2, duration: 0.2 }));
+    link.addEventListener('mouseleave', () => gsap.to(link, { y: 0, duration: 0.3, ease: 'elastic.out(1, 0.5)' }));
+  });
+
+  // About badge pulse
+  gsap.to('.about-badge', { scale: 1.05, duration: 1.5, ease: 'power1.inOut', yoyo: true, repeat: -1 });
+
+  // Parallax blobs
+  gsap.to('.blob1', { y: -80, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+  gsap.to('.blob2', { y: -50, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 } });
+
+  // Active nav highlight
+  ['hero','services','about','testimonials','gallery','contact'].forEach(id => {
+    ScrollTrigger.create({
+      trigger: `#${id}`, start: 'top 50%', end: 'bottom 50%',
+      onEnter: () => setActiveNav(id),
+      onEnterBack: () => setActiveNav(id)
+    });
+  });
+  function setActiveNav(id) {
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.style.color = a.getAttribute('href') === `#${id}` ? 'var(--warm-orange)' : '';
+    });
+  }
+
+  // Phone link bounce in contact
+  gsap.from('.contact-items .contact-item', {
+    x: -20, opacity: 0, stagger: 0.1, duration: 0.5,
+    scrollTrigger: { trigger: '.contact-items', start: 'top 85%' }
+  });
+  // Gallery
+  gsap.from('.gallery-header > *', {
+    y: 30, opacity: 0, stagger: 0.15, duration: 0.7,
+    scrollTrigger: { trigger: '#gallery', start: 'top 75%' }
+  });
+  gsap.from('.gallery-item', {
+    scale: 0.88, opacity: 0, stagger: 0.08, duration: 0.5, ease: 'back.out(1.4)',
+    scrollTrigger: { trigger: '.gallery-grid', start: 'top 80%' }
+  });
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = lightbox.querySelector('.lightbox-img');
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => {
+      lbImg.src = item.querySelector('img').src;
+      lbImg.alt = item.querySelector('img').alt;
+      lightbox.classList.add('open');
+    });
+  });
+  lightbox.addEventListener('click', e => {
+    if (e.target !== lbImg) lightbox.classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+  });
+
+  // Zalo float entrance
+  gsap.from(['.zalo-pulse', '.zalo-float'], {
+    x: 80, opacity: 0, duration: 0.7, ease: 'back.out(1.4)', delay: 1.5
+  });
+</script>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">✕</button>
+  <img class="lightbox-img" src="" alt="">
+</div>
+
+<!-- ===== ZALO FLOATING BUTTON ===== -->
+<div class="zalo-pulse"></div>
+<a href="https://zalo.me/0961291597" target="_blank" rel="noopener noreferrer"
+   class="zalo-float" aria-label="Chat Zalo">
+  <span class="zalo-tooltip" data-vi="Chat Zalo" data-en="Chat on Zalo">Chat Zalo</span>
+  <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <text x="5" y="28" font-family="Arial Black, sans-serif" font-size="25" font-weight="900" fill="white">Z</text>
+  </svg>
+</a>
+</body>
+</html>

@@ -1,0 +1,89 @@
+.services {
+  background: white;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 60px;
+}
+
+.servicesHeader {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.servicesHeader .section-sub { margin: 0 auto; }
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.servicesGrid .serviceCard:nth-child(4) { grid-column: 1 / 2; }
+.servicesGrid .serviceCard:nth-child(5) { grid-column: 2 / 3; }
+
+.serviceCard {
+  background: var(--cream);
+  border-radius: 22px;
+  padding: 32px 26px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.serviceCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(255, 112, 67, 0.15);
+  border-color: var(--blush);
+}
+.serviceCard::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 70px; height: 70px;
+  border-radius: 0 22px 0 70px;
+  opacity: 0.13;
+}
+.serviceCard:nth-child(1)::before { background: var(--warm-orange); }
+.serviceCard:nth-child(2)::before { background: var(--teal); }
+.serviceCard:nth-child(3)::before { background: var(--yellow); }
+.serviceCard:nth-child(4)::before { background: var(--green); }
+.serviceCard:nth-child(5)::before { background: var(--soft-orange); }
+
+.serviceIcon {
+  font-size: 2.6rem;
+  margin-bottom: 18px;
+  display: block;
+}
+.serviceTitle {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+.serviceDesc {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+.serviceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  color: var(--warm-orange);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: gap 0.2s;
+}
+.serviceLink:hover { gap: 10px; }
+
+@media (max-width: 900px) {
+  .services { padding: 60px 20px; }
+  .servicesGrid { grid-template-columns: 1fr 1fr; }
+  .servicesGrid .serviceCard:nth-child(4),
+  .servicesGrid .serviceCard:nth-child(5) { grid-column: auto; }
+}
+@media (max-width: 580px) {
+  .servicesGrid { grid-template-columns: 1fr; }
+}
