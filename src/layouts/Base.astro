@@ -1,0 +1,122 @@
+---
+import '../styles/global.css'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import ContactDock from '../components/ContactDock.astro'
+import { clinic } from '../data/clinic'
+import { clinicSchema, websiteSchema } from '../lib/schema'
+import { tr, ui, type Lang } from '../i18n'
+import balooLatin from '@fontsource/baloo-2/files/baloo-2-latin-700-normal.woff2?url'
+import balooViet from '@fontsource/baloo-2/files/baloo-2-vietnamese-700-normal.woff2?url'
+import nunitoLatin from '@fontsource/nunito/files/nunito-latin-400-normal.woff2?url'
+import nunitoViet from '@fontsource/nunito/files/nunito-vietnamese-400-normal.woff2?url'
+
+interface Props {
+  lang: Lang
+  /** Page title without the brand suffix. Omit on the home page. */
+  title: string
+  description: string
+  /** Paths of this page in each language, used for canonical + hreflang. */
+  alternates: Record<Lang, string>
+  /** Absolute or root-relative image for social previews. */
+  image?: string
+  jsonLd?: object[]
+  noindex?: boolean
+  /** Use the title as-is (no brand suffix). */
+  rawTitle?: boolean
+}
+
+const { lang, title, description, alternates, image = '/og-image.jpg', jsonLd = [], noindex = false, rawTitle = false } =
+  Astro.props
+
+const site = Astro.site!
+const fullTitle = rawTitle ? title : `${title} | ${tr(clinic.shortName, lang)}`
+const canonical = new URL(alternates[lang], site).href
+const ogImage = new URL(image, site).href
+const htmlLang = lang === 'vi' ? 'vi' : 'en'
+
+// Preload the fonts used above the fold so headings don't reflow when they swap in.
+const preloadFonts = lang === 'vi' ? [balooLatin, balooViet, nunitoLatin, nunitoViet] : [balooLatin, nunitoLatin]
+
+const schemas = [clinicSchema(site, lang, ogImage), websiteSchema(site, lang), ...jsonLd]
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {preloadFonts.map(href => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <link rel="alternate" hreflang="vi" href={new URL(alternates.vi, site).href} />
+    <link rel="alternate" hreflang="en" href={new URL(alternates.en, site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates.vi, site).href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={tr(clinic.name, lang)} />
+    <meta property="og:locale" content={lang === 'vi' ? 'vi_VN' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'vi' ? 'en_US' : 'vi_VN'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={tr(clinic.name, lang)} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#c2410c" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {schemas.map(s => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+
+    <script is:inline>document.documentElement.classList.add('js')</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{tr(ui.skip, lang)}</a>
+    <Header lang={lang} alternates={alternates} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} alternates={alternates} />
+    <ContactDock lang={lang} />
+
+    <script>
+      import '../scripts/site'
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--ink);
+    color: #fff;
+    font-weight: 700;
+    transform: translateY(-150%);
+    transition: transform 0.2s;
+  }
+
+  .skip-link:focus {
+    transform: none;
+    color: #fff;
+  }
+
+  main:focus {
+    outline: none;
+  }
+</style>

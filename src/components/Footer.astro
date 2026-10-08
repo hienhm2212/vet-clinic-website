@@ -1,0 +1,200 @@
+---
+import Icon from './Icon.astro'
+import Logo from './Logo.astro'
+import { clinic } from '../data/clinic'
+import { services } from '../data/services'
+import { route, serviceRoute, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+  alternates: Record<Lang, string>
+}
+
+const { lang, alternates } = Astro.props
+const otherLang: Lang = lang === 'vi' ? 'en' : 'vi'
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="col about">
+      <a class="brand" href={route('home', lang)}>
+        <Logo size={40} />
+        <span>{tr(clinic.name, lang)}</span>
+      </a>
+      <p>
+        {
+          lang === 'vi'
+            ? 'Phòng khám thú y tận tâm cho chó mèo tại Bình Mỹ (Củ Chi), TP. Hồ Chí Minh. Khám, tiêm phòng, siêu âm, xét nghiệm, điều trị và phẫu thuật.'
+            : 'Caring veterinary clinic for dogs and cats in Binh My (Cu Chi), Ho Chi Minh City — exams, vaccines, ultrasound, lab tests, treatment and surgery.'
+        }
+      </p>
+      <div class="social">
+        <a class="btn btn--zalo" href={clinic.zalo} target="_blank" rel="noopener">
+          <img src="/zalo-icon.svg" alt="" width="20" height="20" />
+          {tr(ui.zalo, lang)}
+        </a>
+        {
+          clinic.facebook && (
+            <a class="btn btn--outline" href={clinic.facebook} target="_blank" rel="noopener">
+              Facebook
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="col">
+      <h2>{tr(ui.nav.contact, lang)}</h2>
+      <address>
+        <ul class="info">
+          <li>
+            <Icon name="mapPin" size={20} />
+            <a href={clinic.mapsUrl} target="_blank" rel="noopener">{tr(clinic.address.full, lang)}</a>
+          </li>
+          <li>
+            <Icon name="phone" size={20} />
+            <a href={clinic.phoneHref}>{clinic.phone}</a>
+          </li>
+          <li>
+            <Icon name="clock" size={20} />
+            <span>{tr(ui.everyDay, lang)}: {clinic.hours.open} – {clinic.hours.close}</span>
+          </li>
+        </ul>
+      </address>
+    </div>
+
+    <div class="col">
+      <h2>{tr(ui.nav.services, lang)}</h2>
+      <ul class="links">
+        {
+          services.map(s => (
+            <li>
+              <a href={serviceRoute(s.slug, lang)}>{tr(s.title, lang)}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="col">
+      <h2>{lang === 'vi' ? 'Liên kết' : 'Links'}</h2>
+      <ul class="links">
+        <li><a href={route('about', lang)}>{tr(ui.nav.about, lang)}</a></li>
+        <li><a href={route('contact', lang)}>{tr(ui.book, lang)}</a></li>
+        <li><a href={clinic.directionsUrl} target="_blank" rel="noopener">{tr(ui.directions, lang)}</a></li>
+        <li>
+          <a href={alternates[otherLang]} hreflang={otherLang} lang={otherLang}>{tr(ui.switchLang, lang)}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container bottom">
+    <p>© {year} {tr(clinic.name, lang)}. {lang === 'vi' ? 'Làm bằng ♥ cho thú cưng.' : 'Made with ♥ for pets.'}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #2a1a12;
+    color: #f3e6da;
+    padding-top: 64px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1.2fr 1fr 0.9fr;
+    gap: 40px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    text-decoration: none;
+  }
+
+  .about p {
+    margin-top: 16px;
+    color: #d9c4b3;
+    font-size: 0.98rem;
+  }
+
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .social .btn--outline {
+    color: #fff;
+    border-color: #6d4c3d;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  .info,
+  .links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    font-size: 0.98rem;
+  }
+
+  .info li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .info svg {
+    flex: none;
+    margin-top: 3px;
+    color: #fdba74;
+  }
+
+  .site-footer a:not(.btn) {
+    color: #f3e6da;
+    text-decoration: none;
+  }
+
+  .site-footer a:not(.btn):hover {
+    color: #fdba74;
+    text-decoration: underline;
+  }
+
+  .bottom {
+    margin-top: 48px;
+    padding-block: 24px;
+    border-top: 1px solid #4a3328;
+    font-size: 0.9rem;
+    color: #c9b3a2;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+</style>

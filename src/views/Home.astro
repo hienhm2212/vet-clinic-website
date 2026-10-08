@@ -1,0 +1,776 @@
+---
+import { Picture } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import OpenStatus from '../components/OpenStatus.astro'
+import ServiceCard from '../components/ServiceCard.astro'
+import Reviews from '../components/Reviews.astro'
+import Gallery from '../components/Gallery.astro'
+import Faq from '../components/Faq.astro'
+import MapCard from '../components/MapCard.astro'
+import CtaBand from '../components/CtaBand.astro'
+import { clinic } from '../data/clinic'
+import { photos } from '../data/photos'
+import { services, generalFaqs } from '../data/services'
+import { faqSchema } from '../lib/schema'
+import { route, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const vi = lang === 'vi'
+
+const title = vi
+  ? 'Phòng Khám Thú Y Huỳnh Như – Bình Mỹ, Củ Chi, TP.HCM'
+  : 'Huynh Nhu Vet Clinic – Dog & Cat Vet in Binh My, Cu Chi'
+const description = vi
+  ? 'Thú y cho chó mèo tại 138 Hà Duy Phiên, Bình Mỹ (Củ Chi), TP.HCM. Khám, tiêm phòng, siêu âm, xét nghiệm, điều trị, triệt sản. Mở cửa 8:00–20:00 mỗi ngày. ☎ 0961 291 597.'
+  : 'Veterinary clinic for dogs and cats at 138 Ha Duy Phien, Binh My (Cu Chi), HCMC. Check-ups, vaccines, ultrasound, lab tests, treatment and spay/neuter. Open 8 AM–8 PM daily.'
+
+const why = [
+  {
+    icon: 'stethoscope' as const,
+    title: { vi: 'Chẩn đoán đúng bệnh', en: 'Accurate diagnosis' },
+    text: {
+      vi: 'Khám kỹ, siêu âm và xét nghiệm tại chỗ để tìm đúng nguyên nhân — không điều trị mò.',
+      en: 'Careful exams with on-site ultrasound and lab tests to find the real cause — no guesswork.',
+    },
+  },
+  {
+    icon: 'heart' as const,
+    title: { vi: 'Tận tâm như người nhà', en: 'Caring like family' },
+    text: {
+      vi: 'Bác sĩ trực tiếp thăm khám, giải thích rõ ràng và theo dõi bé sau điều trị.',
+      en: 'The vet sees your pet personally, explains everything clearly and follows up after treatment.',
+    },
+  },
+  {
+    icon: 'shieldCheck' as const,
+    title: { vi: 'Chi phí minh bạch, hợp lý', en: 'Fair, transparent pricing' },
+    text: {
+      vi: 'Chỉ làm những gì bé thật sự cần. Báo chi phí trước khi thực hiện.',
+      en: 'Only what your pet really needs, with costs explained before we start.',
+    },
+  },
+  {
+    icon: 'clock' as const,
+    title: { vi: 'Mở cửa mỗi ngày', en: 'Open every day' },
+    text: {
+      vi: `Từ ${clinic.hours.open} đến ${clinic.hours.close}, kể cả cuối tuần. Liên hệ nhanh qua điện thoại, Zalo.`,
+      en: `From ${clinic.hours.open} to ${clinic.hours.close}, weekends included. Quick contact by phone or Zalo.`,
+    },
+  },
+]
+
+const steps = [
+  {
+    icon: 'phone' as const,
+    title: { vi: 'Gọi hoặc nhắn Zalo', en: 'Call or message' },
+    text: {
+      vi: 'Mô tả tình trạng của bé, bác sĩ tư vấn và hẹn giờ phù hợp.',
+      en: 'Tell us what is going on and we will find a good time.',
+    },
+  },
+  {
+    icon: 'paw' as const,
+    title: { vi: 'Đưa bé đến khám', en: 'Bring your pet in' },
+    text: {
+      vi: 'Bác sĩ thăm khám, chẩn đoán và giải thích phác đồ, chi phí.',
+      en: 'The vet examines, diagnoses and explains the plan and cost.',
+    },
+  },
+  {
+    icon: 'message' as const,
+    title: { vi: 'Theo dõi sau khám', en: 'Follow-up' },
+    text: {
+      vi: 'Hướng dẫn chăm sóc tại nhà và nhắc lịch tái khám, tiêm phòng.',
+      en: 'Home-care instructions and reminders for check-ups and vaccines.',
+    },
+  },
+]
+---
+
+<Base
+  lang={lang}
+  title={title}
+  rawTitle
+  description={description}
+  alternates={{ vi: route('home', 'vi'), en: route('home', 'en') }}
+  jsonLd={[faqSchema(generalFaqs, lang)]}
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <OpenStatus lang={lang} />
+        <h1>
+          {vi ? 'Phòng khám thú y ' : 'Caring vet for '}
+          <span class="text-brand">{vi ? 'tận tâm' : 'dogs & cats'}</span>
+          {vi ? ' cho chó mèo tại Bình Mỹ, Củ Chi' : ' in Binh My, Cu Chi'}
+        </h1>
+        <p class="lead">
+          {
+            vi
+              ? 'Khám tổng quát, tiêm phòng, siêu âm, xét nghiệm và điều trị — bác sĩ Huỳnh Như chăm sóc bé như người thân trong nhà.'
+              : 'Check-ups, vaccines, ultrasound, lab tests and treatment — Dr. Huynh Nhu cares for your pet like family.'
+          }
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href={`${route('contact', lang)}#dat-lich`}>
+            <Icon name="calendar" />
+            {tr(ui.book, lang)}
+          </a>
+          <a class="btn btn--outline" href={clinic.phoneHref}>
+            <Icon name="phone" />
+            {clinic.phone}
+          </a>
+        </div>
+        <ul class="hero-trust">
+          <li><Icon name="check" size={18} /> {vi ? `${clinic.yearsExperience}+ năm kinh nghiệm` : `${clinic.yearsExperience}+ years of experience`}</li>
+          <li><Icon name="check" size={18} /> {vi ? 'Siêu âm & xét nghiệm tại chỗ' : 'On-site ultrasound & lab'}</li>
+          <li><Icon name="check" size={18} /> {vi ? 'Mở cửa cả Chủ nhật' : 'Open on Sundays'}</li>
+        </ul>
+      </div>
+
+      <div class="hero-media">
+        <div class="blob" aria-hidden="true"></div>
+        <Picture
+          src={photos.dog.src}
+          formats={['avif', 'webp']}
+          alt={tr(photos.dog.alt, lang)}
+          class="hero-main"
+          loading="eager"
+          fetchpriority="high"
+          widths={[photos.dog.src.width]}
+          sizes="(max-width: 900px) 70vw, 380px"
+        />
+        <Picture
+          src={photos.meo.src}
+          formats={['avif', 'webp']}
+          alt={tr(photos.meo.alt, lang)}
+          class="hero-side"
+          loading="eager"
+          widths={[340, photos.meo.src.width]}
+          sizes="(max-width: 900px) 45vw, 260px"
+        />
+        <div class="hero-badge doctor">
+          <span class="badge-icon"><Icon name="stethoscope" size={22} /></span>
+          <span>
+            <strong>{tr(clinic.doctor.name, lang)}</strong>
+            <small>{tr(clinic.doctor.role, lang)}</small>
+          </span>
+        </div>
+        <div class="hero-badge rating">
+          <span class="stars" aria-hidden="true">
+            {Array.from({ length: 5 }, () => <Icon name="star" size={16} />)}
+          </span>
+          <small>{vi ? 'Được khách hàng đánh giá cao' : 'Loved by pet parents'}</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK INFO -->
+  <section class="quick" aria-label={vi ? 'Thông tin nhanh' : 'Quick info'}>
+    <div class="container quick-grid">
+      <a class="quick-item card" href={clinic.directionsUrl} target="_blank" rel="noopener">
+        <span class="q-icon"><Icon name="mapPin" /></span>
+        <span>
+          <strong>{tr(ui.address, lang)}</strong>
+          <span>{tr(clinic.address.full, lang)}</span>
+        </span>
+      </a>
+      <div class="quick-item card">
+        <span class="q-icon"><Icon name="clock" /></span>
+        <span>
+          <strong>{tr(ui.hours, lang)}</strong>
+          <span>{tr(ui.everyDay, lang)}: {clinic.hours.open} – {clinic.hours.close}</span>
+        </span>
+      </div>
+      <a class="quick-item card" href={clinic.phoneHref}>
+        <span class="q-icon"><Icon name="phone" /></span>
+        <span>
+          <strong>{vi ? 'Hotline / Zalo' : 'Phone / Zalo'}</strong>
+          <span>{clinic.phone}</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow"><Icon name="paw" /> {vi ? 'Dịch vụ' : 'Services'}</span>
+        <h2 id="services-title">
+          {vi ? 'Mọi điều bé cần, ' : 'Everything your pet needs, '}
+          <span class="text-brand">{vi ? 'ở một nơi' : 'in one place'}</span>
+        </h2>
+        <p>
+          {
+            vi
+              ? 'Từ khám định kỳ, tiêm phòng đến chẩn đoán hình ảnh, điều trị và phẫu thuật — phòng khám đồng hành cùng bé ở mọi giai đoạn.'
+              : 'From routine check-ups and vaccines to imaging, treatment and surgery — we look after your pet at every stage of life.'
+          }
+        </p>
+      </div>
+      <div class="services-grid">
+        {services.map((s, i) => <ServiceCard service={s} lang={lang} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section section--white" aria-labelledby="why-title">
+    <div class="container why">
+      <div class="why-media" data-reveal>
+        <Picture
+          src={photos.dog2.src}
+          formats={['avif', 'webp']}
+          alt={tr(photos.dog2.alt, lang)}
+          widths={[photos.dog2.src.width]}
+          sizes="(max-width: 900px) 90vw, 420px"
+          loading="lazy"
+        />
+        <div class="exp">
+          <strong>{clinic.yearsExperience}+</strong>
+          <span>{vi ? 'năm chăm sóc thú cưng' : 'years caring for pets'}</span>
+        </div>
+      </div>
+      <div class="why-copy">
+        <span class="eyebrow"><Icon name="heart" /> {vi ? 'Vì sao chọn chúng tôi' : 'Why us'}</span>
+        <h2 id="why-title">
+          {vi ? 'Mỗi thú cưng đều xứng đáng được ' : 'Every pet deserves to be '}
+          <span class="text-brand">{vi ? 'yêu thương' : 'treated like family'}</span>
+        </h2>
+        <p class="why-lead">
+          {
+            vi
+              ? `Phòng khám do ${tr(clinic.doctor.name, lang)} trực tiếp phụ trách. Nhiều gia đình tìm đến sau khi bé đã điều trị ở nơi khác chưa khỏi — và chúng tôi tự hào giúp các bé khỏe lại.`
+              : `The clinic is run personally by ${tr(clinic.doctor.name, lang)}. Many families come to us after treatment elsewhere did not work — and we are proud to help their pets get well again.`
+          }
+        </p>
+        <ul class="why-list">
+          {
+            why.map((w, i) => (
+              <li data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+                <span class="w-icon">
+                  <Icon name={w.icon} />
+                </span>
+                <span>
+                  <h3>{tr(w.title, lang)}</h3>
+                  <p>{tr(w.text, lang)}</p>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="btn btn--outline" href={route('about', lang)}>
+          {vi ? 'Tìm hiểu về phòng khám' : 'About the clinic'}
+          <Icon name="arrowRight" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="section" aria-labelledby="steps-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow"><Icon name="calendar" /> {vi ? 'Đặt lịch dễ dàng' : 'Easy booking'}</span>
+        <h2 id="steps-title">{vi ? 'Đưa bé đi khám chỉ với 3 bước' : 'Three simple steps'}</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li class="step card" data-reveal style={`--reveal-delay:${i * 0.1}s`}>
+              <span class="step-num" aria-hidden="true">{i + 1}</span>
+              <span class="step-icon">
+                <Icon name={s.icon} size={28} />
+              </span>
+              <h3>{tr(s.title, lang)}</h3>
+              <p>{tr(s.text, lang)}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Reviews lang={lang} />
+
+  <!-- GALLERY -->
+  <section class="section" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow"><Icon name="paw" /> {vi ? 'Hình ảnh' : 'Gallery'}</span>
+        <h2 id="gallery-title">
+          {vi ? 'Những bệnh nhân ' : 'Our lovely '}
+          <span class="text-brand">{vi ? 'đáng yêu' : 'patients'}</span>
+        </h2>
+        <p>{vi ? 'Một chút hình ảnh thật từ phòng khám mỗi ngày.' : 'Real moments from everyday life at the clinic.'}</p>
+      </div>
+      <Gallery lang={lang} />
+    </div>
+  </section>
+
+  <!-- FAQ + CONTACT -->
+  <section class="section section--white" aria-labelledby="faq-title">
+    <div class="container faq-contact">
+      <Faq faqs={generalFaqs} lang={lang} />
+      <div class="contact-side">
+        <h2 class="contact-title">{vi ? 'Đến phòng khám' : 'Visit us'}</h2>
+        <address class="contact-card card">
+          <p><Icon name="mapPin" size={20} /> <span>{tr(clinic.address.full, lang)}<br /><small>{tr(clinic.address.note, lang)}</small></span></p>
+          <p><Icon name="phone" size={20} /> <a href={clinic.phoneHref}>{clinic.phone}</a></p>
+          <p><Icon name="clock" size={20} /> <span>{tr(ui.everyDay, lang)}: {clinic.hours.open} – {clinic.hours.close}</span></p>
+        </address>
+        <MapCard lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  /* HERO */
+  .hero {
+    position: relative;
+    padding-block: clamp(32px, 6vw, 80px) clamp(48px, 7vw, 96px);
+    background:
+      radial-gradient(circle at 85% 20%, #ffe4cc 0, transparent 40%),
+      radial-gradient(circle at 10% 90%, #d5f5ef 0, transparent 35%),
+      var(--bg);
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: clamp(32px, 5vw, 64px);
+  }
+
+  .hero h1 {
+    margin-top: 20px;
+  }
+
+  .lead {
+    margin-top: 18px;
+    max-width: 54ch;
+    font-size: clamp(1.08rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--ink-2);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .hero-trust {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-top: 28px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .hero-trust li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-trust :global(svg) {
+    padding: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    stroke-width: 3.5;
+  }
+
+  .hero-media {
+    position: relative;
+    min-height: 520px;
+  }
+
+  .blob {
+    position: absolute;
+    inset: 8% 0 4% 8%;
+    border-radius: 42% 58% 55% 45% / 50% 40% 60% 50%;
+    background: linear-gradient(135deg, #fed7aa, #fdba74);
+    opacity: 0.6;
+  }
+
+  .hero-media :global(.hero-main) {
+    position: absolute;
+    top: 0;
+    right: 6%;
+    width: 64%;
+    aspect-ratio: 382 / 510;
+    object-fit: cover;
+    border-radius: 200px 200px var(--radius-lg) var(--radius-lg);
+    border: 6px solid #fff;
+    box-shadow: var(--shadow);
+  }
+
+  .hero-media :global(.hero-side) {
+    position: absolute;
+    bottom: 4%;
+    left: 0;
+    width: 48%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 6px solid #fff;
+    box-shadow: var(--shadow);
+  }
+
+  .hero-badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: var(--shadow);
+    line-height: 1.25;
+  }
+
+  .hero-badge strong {
+    display: block;
+    font-size: 0.92rem;
+  }
+
+  .hero-badge small {
+    display: block;
+    color: var(--ink-2);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .doctor {
+    top: 52%;
+    right: 0;
+  }
+
+  .badge-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .rating {
+    top: 8%;
+    left: 4%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .stars {
+    display: flex;
+    gap: 2px;
+    color: var(--sun);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .doctor {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .rating {
+      animation: float 6s ease-in-out 1.5s infinite;
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* QUICK INFO */
+  .quick {
+    position: relative;
+    margin-top: -40px;
+  }
+
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .quick-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+  }
+
+  a.quick-item:hover {
+    transform: translateY(-3px);
+    color: var(--ink);
+  }
+
+  .quick-item > span:last-child {
+    display: grid;
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+
+  .q-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* WHY */
+  .why {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .why-media {
+    position: relative;
+    max-width: 420px;
+  }
+
+  .why-media :global(img) {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+
+  .exp {
+    position: absolute;
+    right: -20px;
+    bottom: 32px;
+    display: grid;
+    padding: 18px 22px;
+    border-radius: 20px;
+    background: var(--brand);
+    color: #fff;
+    text-align: center;
+    box-shadow: var(--shadow);
+    line-height: 1.1;
+  }
+
+  .exp strong {
+    font-family: var(--font-head);
+    font-size: 2.6rem;
+  }
+
+  .exp span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    max-width: 10ch;
+  }
+
+  .why-lead {
+    margin-top: 16px;
+    color: var(--ink-2);
+    font-size: 1.1rem;
+  }
+
+  .why-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-block: 32px;
+  }
+
+  .why-list li {
+    display: flex;
+    gap: 14px;
+  }
+
+  .why-list h3 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+
+  .why-list p {
+    color: var(--ink-2);
+    font-size: 0.97rem;
+  }
+
+  .w-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  /* STEPS */
+  .steps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    counter-reset: step;
+  }
+
+  .step {
+    position: relative;
+    padding: 32px 28px;
+    text-align: center;
+  }
+
+  .step-num {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-family: var(--font-head);
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--brand-soft);
+  }
+
+  .step-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .step p {
+    margin-top: 8px;
+    color: var(--ink-2);
+  }
+
+  /* FAQ + CONTACT */
+  .faq-contact {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .contact-title {
+    margin-bottom: 24px;
+  }
+
+  .contact-card {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 22px;
+    font-style: normal;
+  }
+
+  .contact-card p {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .contact-card :global(svg) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--brand);
+  }
+
+  .contact-card small {
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 960px) {
+    .hero-grid,
+    .why,
+    .faq-contact {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hero-media {
+      min-height: 0;
+      height: min(108vw, 520px);
+      max-width: 520px;
+      width: 100%;
+      margin-inline: auto;
+    }
+
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .why-media {
+      margin-inline: auto;
+    }
+
+    .quick {
+      margin-top: 0;
+      padding-bottom: 8px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .hero-actions {
+      display: grid;
+    }
+
+    .quick-grid,
+    .steps,
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .why-list {
+      grid-template-columns: 1fr;
+    }
+
+    .exp {
+      right: 12px;
+    }
+
+    .doctor {
+      top: auto;
+      bottom: 0;
+      right: 0;
+    }
+  }
+</style>

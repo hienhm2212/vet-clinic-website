@@ -1,0 +1,118 @@
+---
+import Icon from './Icon.astro'
+import { clinic } from '../data/clinic'
+import { tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+---
+
+<!-- Click-to-load map: the Google Maps embed weighs ~1 MB of JS, so it is only
+     loaded when someone asks for it. -->
+<div class="map card" data-map={clinic.mapEmbedUrl} data-title={tr(clinic.name, lang)}>
+  <div class="placeholder">
+    <svg class="pattern" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="400" height="260" fill="#e9f3ee"></rect>
+      <path d="M-10 190 C80 150 140 210 230 160 S360 120 420 140" stroke="#fff" stroke-width="18" fill="none"></path>
+      <path d="M120 -10 L170 280" stroke="#fff" stroke-width="12" fill="none"></path>
+      <path d="M290 -10 C270 80 320 160 300 280" stroke="#fde7cf" stroke-width="10" fill="none"></path>
+      <path d="M-10 60 L420 90" stroke="#fff" stroke-width="8" fill="none"></path>
+      <circle cx="40" cy="120" r="26" fill="#cfe8dc"></circle>
+      <circle cx="360" cy="40" r="34" fill="#cfe8dc"></circle>
+    </svg>
+    <span class="pin"><Icon name="mapPin" size={30} /></span>
+    <div class="actions">
+      <button type="button" class="btn btn--primary" data-map-load>
+        <Icon name="mapPin" />
+        {lang === 'vi' ? 'Xem bản đồ' : 'Show map'}
+      </button>
+      <a class="btn btn--outline" href={clinic.directionsUrl} target="_blank" rel="noopener">
+        <Icon name="arrowRight" />
+        {tr(ui.directions, lang)}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach(box => {
+    box.querySelector('[data-map-load]')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe')
+      iframe.src = box.dataset.map!
+      iframe.title = box.dataset.title!
+      iframe.loading = 'lazy'
+      iframe.referrerPolicy = 'no-referrer-when-downgrade'
+      iframe.allowFullscreen = true
+      box.replaceChildren(iframe)
+    })
+  })
+</script>
+
+<style>
+  .map {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .map :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .pattern {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pin {
+    position: absolute;
+    top: 26%;
+    left: 50%;
+    translate: -50% 0;
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50% 50% 50% 0;
+    rotate: -45deg;
+    background: var(--brand);
+    color: #fff;
+    box-shadow: var(--shadow);
+  }
+
+  .pin :global(svg) {
+    rotate: 45deg;
+  }
+
+  .actions {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding-inline: 16px;
+  }
+
+  .actions .btn--outline {
+    background: var(--surface);
+  }
+
+  .actions .btn--outline:hover {
+    background: var(--brand);
+  }
+</style>

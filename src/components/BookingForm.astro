@@ -1,0 +1,363 @@
+---
+import Icon from './Icon.astro'
+import { clinic } from '../data/clinic'
+import { services } from '../data/services'
+import { tr, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+
+/**
+ * Optional: a form backend such as Formspree (https://formspree.io/f/xxxx) or
+ * Web3Forms. Set PUBLIC_FORM_ENDPOINT at build time to receive requests by email.
+ * Without it, the form turns the request into a ready-to-send Zalo/SMS message.
+ */
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? ''
+const vi = lang === 'vi'
+
+const L = {
+  name: vi ? 'Họ và tên' : 'Your name',
+  phone: vi ? 'Số điện thoại' : 'Phone number',
+  phoneHint: vi ? 'Bác sĩ sẽ gọi lại số này để xác nhận lịch.' : 'The vet will call this number to confirm.',
+  pet: vi ? 'Tên thú cưng' : "Pet's name",
+  species: vi ? 'Loài' : 'Species',
+  service: vi ? 'Dịch vụ cần' : 'Service',
+  date: vi ? 'Ngày muốn đến' : 'Preferred date',
+  notes: vi ? 'Tình trạng của bé' : 'What is going on?',
+  notesPh: vi ? 'VD: Bé bỏ ăn 2 ngày, nôn 3 lần…' : 'e.g. Not eating for 2 days, vomited 3 times…',
+  optional: vi ? '(không bắt buộc)' : '(optional)',
+  submit: vi ? 'Gửi yêu cầu đặt lịch' : 'Send booking request',
+  other: vi ? 'Khác / chưa rõ' : 'Other / not sure',
+  dog: vi ? 'Chó' : 'Dog',
+  cat: vi ? 'Mèo' : 'Cat',
+  otherPet: vi ? 'Khác' : 'Other',
+  errName: vi ? 'Vui lòng nhập họ tên.' : 'Please enter your name.',
+  errPhone: vi ? 'Số điện thoại chưa đúng (VD: 0961 291 597).' : 'Please enter a valid phone number (e.g. 0961 291 597).',
+  sending: vi ? 'Đang gửi…' : 'Sending…',
+}
+---
+
+<form
+  class="booking card"
+  id="booking-form"
+  data-booking
+  data-endpoint={endpoint}
+  data-lang={lang}
+  data-phone={clinic.phoneIntl}
+  data-zalo={clinic.zalo}
+  data-err-name={L.errName}
+  data-err-phone={L.errPhone}
+  data-sending={L.sending}
+  method="post"
+  action={endpoint || undefined}
+  novalidate
+>
+  <div class="row">
+    <div class="field">
+      <label for="bf-name">{L.name}</label>
+      <input id="bf-name" name="name" type="text" autocomplete="name" required aria-describedby="bf-name-err" />
+      <p class="error" id="bf-name-err" aria-live="polite"></p>
+    </div>
+    <div class="field">
+      <label for="bf-phone">{L.phone}</label>
+      <input
+        id="bf-phone"
+        name="phone"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        required
+        aria-describedby="bf-phone-hint bf-phone-err"
+      />
+      <p class="hint" id="bf-phone-hint">{L.phoneHint}</p>
+      <p class="error" id="bf-phone-err" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="bf-pet">{L.pet} <span class="opt">{L.optional}</span></label>
+      <input id="bf-pet" name="pet" type="text" />
+    </div>
+    <fieldset class="field">
+      <legend>{L.species}</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="species" value={L.dog} checked /> <span>🐶 {L.dog}</span></label>
+        <label class="chip"><input type="radio" name="species" value={L.cat} /> <span>🐱 {L.cat}</span></label>
+        <label class="chip"><input type="radio" name="species" value={L.otherPet} /> <span>{L.otherPet}</span></label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="bf-service">{L.service}</label>
+      <select id="bf-service" name="service">
+        {services.map(s => <option value={tr(s.title, lang)}>{tr(s.title, lang)}</option>)}
+        <option value={L.other}>{L.other}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="bf-date">{L.date} <span class="opt">{L.optional}</span></label>
+      <input id="bf-date" name="date" type="date" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="bf-notes">{L.notes} <span class="opt">{L.optional}</span></label>
+    <textarea id="bf-notes" name="notes" rows="4" placeholder={L.notesPh}></textarea>
+  </div>
+
+  <!-- Spam trap: real visitors never see or fill this. -->
+  <div class="trap" aria-hidden="true">
+    <label for="bf-website">Website</label>
+    <input id="bf-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <button class="btn btn--primary btn--block" type="submit">
+    <Icon name="calendar" />
+    <span data-submit-label>{L.submit}</span>
+  </button>
+
+  <noscript>
+    <p class="hint">
+      {vi ? 'Bạn cũng có thể gọi trực tiếp: ' : 'You can also call us directly: '}
+      <a href={clinic.phoneHref}>{clinic.phone}</a>
+    </p>
+  </noscript>
+</form>
+
+<!-- Shown after a successful submission. -->
+<div class="result card" data-booking-result hidden tabindex="-1">
+  <span class="result-icon"><Icon name="check" size={30} /></span>
+  <h3 data-result-title></h3>
+  <p data-result-text></p>
+
+  <div class="send" data-send-options hidden>
+    <pre data-message></pre>
+    <div class="send-actions">
+      <button type="button" class="btn btn--zalo" data-send-zalo>
+        <img src="/zalo-icon.svg" alt="" width="20" height="20" />
+        {vi ? 'Sao chép & mở Zalo' : 'Copy & open Zalo'}
+      </button>
+      <a class="btn btn--accent" data-send-sms href={clinic.sms}>
+        <Icon name="message" />
+        {vi ? 'Gửi SMS' : 'Send SMS'}
+      </a>
+      <a class="btn btn--outline" href={clinic.phoneHref}>
+        <Icon name="phone" />
+        {vi ? 'Gọi' : 'Call'}
+        {clinic.phone}
+      </a>
+    </div>
+    <p class="hint" data-copied hidden aria-live="polite">
+      {vi ? 'Đã sao chép tin nhắn — hãy dán vào khung chat Zalo.' : 'Message copied — paste it into the Zalo chat.'}
+    </p>
+  </div>
+
+  <button type="button" class="link-btn" data-booking-reset>
+    {vi ? '← Sửa lại thông tin' : '← Edit my request'}
+  </button>
+</div>
+
+<script>
+  import { initBookingForms } from '../scripts/booking'
+  initBookingForms()
+</script>
+
+<style>
+  .booking,
+  .result {
+    padding: clamp(22px, 4vw, 36px);
+  }
+
+  .booking {
+    display: grid;
+    gap: 18px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  label,
+  legend {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  legend {
+    margin-bottom: 6px;
+  }
+
+  .opt {
+    font-weight: 400;
+    color: var(--ink-2);
+    font-size: 0.85rem;
+  }
+
+  input:not([type='radio']),
+  select,
+  textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1.5px solid #e2cdb9;
+    border-radius: 12px;
+    background: #fffdfb;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  [aria-invalid='true'] {
+    border-color: #b91c1c !important;
+  }
+
+  .error {
+    color: #b91c1c;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .error:empty {
+    display: none;
+  }
+
+  .hint {
+    color: var(--ink-2);
+    font-size: 0.88rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 10px 16px;
+    border: 1.5px solid #e2cdb9;
+    border-radius: 12px;
+    background: #fffdfb;
+    font-weight: 700;
+  }
+
+  .chip input:checked + span {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+    color: var(--brand-hover);
+  }
+
+  .chip input:focus-visible + span {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .result {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+  }
+
+  .result:focus {
+    outline: none;
+  }
+
+  .result-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .send {
+    display: grid;
+    gap: 14px;
+    width: 100%;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--bg-warm);
+    border: 1px dashed #e2cdb9;
+  }
+
+  .send-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .link-btn {
+    border: 0;
+    background: none;
+    padding: 8px 0;
+    color: var(--brand);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

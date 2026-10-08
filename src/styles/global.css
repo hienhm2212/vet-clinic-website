@@ -1,0 +1,368 @@
+/* Fonts are self-hosted (no Google Fonts round-trip). Each file only declares
+   @font-face rules with unicode-range, so browsers download just the
+   Latin + Vietnamese subsets actually used on the page. */
+@import '@fontsource/nunito/latin-400.css';
+@import '@fontsource/nunito/latin-ext-400.css';
+@import '@fontsource/nunito/vietnamese-400.css';
+@import '@fontsource/nunito/latin-700.css';
+@import '@fontsource/nunito/latin-ext-700.css';
+@import '@fontsource/nunito/vietnamese-700.css';
+@import '@fontsource/baloo-2/latin-700.css';
+@import '@fontsource/baloo-2/latin-ext-700.css';
+@import '@fontsource/baloo-2/vietnamese-700.css';
+
+/* Fallbacks sized to match the web fonts (measured against Arial), so the swap
+   from fallback to web font causes no layout shift. */
+@font-face {
+  font-family: 'Baloo 2 Fallback';
+  font-weight: 700;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Arial');
+  size-adjust: 91.3%;
+  ascent-override: 118%;
+  descent-override: 57%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Nunito Fallback';
+  font-weight: 700;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Arial');
+  size-adjust: 99%;
+  ascent-override: 102%;
+  descent-override: 35%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Nunito Fallback';
+  font-weight: 400;
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans');
+  size-adjust: 99.8%;
+  ascent-override: 101%;
+  descent-override: 35%;
+  line-gap-override: 0%;
+}
+
+:root {
+  color-scheme: light;
+
+  --bg: #fffaf4;
+  --bg-warm: #fff1e4;
+  --surface: #ffffff;
+  --ink: #2a1a12;
+  --ink-2: #5c4033;
+  --line: #f0e0cf;
+
+  --brand: #c2410c;
+  --brand-hover: #9a3412;
+  --brand-soft: #ffedd5;
+  --accent: #0f766e;
+  --accent-soft: #d5f5ef;
+  --sun: #f59e0b;
+  --zalo: #0068ff;
+
+  --font-body: 'Nunito', 'Nunito Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-head: 'Baloo 2', 'Baloo 2 Fallback', system-ui, sans-serif;
+
+  --radius-sm: 10px;
+  --radius: 18px;
+  --radius-lg: 28px;
+  --shadow-sm: 0 1px 2px rgb(74 40 20 / 6%), 0 2px 8px rgb(74 40 20 / 6%);
+  --shadow: 0 2px 6px rgb(74 40 20 / 6%), 0 12px 32px rgb(74 40 20 / 10%);
+  --header-h: 68px;
+  --gutter: clamp(16px, 4vw, 32px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 1.4rem + 3.2vw, 3.6rem);
+}
+
+h2 {
+  font-size: clamp(1.75rem, 1.3rem + 1.9vw, 2.6rem);
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--brand);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--brand-hover);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(64px, 9vw, 112px);
+}
+
+.section--warm {
+  background: var(--bg-warm);
+}
+
+.section--white {
+  background: var(--surface);
+}
+
+.section-head {
+  max-width: 720px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-head p {
+  margin-top: 14px;
+  color: var(--ink-2);
+  font-size: 1.1rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+.text-brand {
+  color: var(--brand);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.btn svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 6px 18px rgb(194 65 12 / 28%);
+}
+
+.btn--primary:hover {
+  background: var(--brand-hover);
+  color: #fff;
+}
+
+.btn--outline {
+  border-color: var(--brand);
+  color: var(--brand);
+  background: transparent;
+}
+
+.btn--outline:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn--accent:hover {
+  background: #0b5d57;
+  color: #fff;
+}
+
+.btn--zalo {
+  background: var(--zalo);
+  color: #fff;
+}
+
+.btn--zalo:hover {
+  background: #0052cc;
+  color: #fff;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.check-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.check-list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.check-list svg {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  stroke-width: 3;
+}
+
+/* Scroll reveal — only when JS is on and the user has not asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+    transition-delay: var(--reveal-delay, 0s);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}

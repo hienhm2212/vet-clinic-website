@@ -1,0 +1,111 @@
+---
+import Icon from './Icon.astro'
+import type { Service } from '../data/services'
+import { serviceRoute, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  service: Service
+  lang: Lang
+  index?: number
+  headingLevel?: 'h2' | 'h3'
+}
+const { service, lang, index = 0, headingLevel: H = 'h3' } = Astro.props
+const href = serviceRoute(service.slug, lang)
+---
+
+<article class="service card" data-reveal style={`--reveal-delay:${(index % 3) * 0.08}s`}>
+  <span class="icon"><Icon name={service.icon} size={28} /></span>
+  <H class="title">
+    <a href={href}>{tr(service.title, lang)}</a>
+  </H>
+  <p>{tr(service.short, lang)}</p>
+  <span class="more" aria-hidden="true">
+    {tr(ui.learnMore, lang)}
+    <Icon name="arrowRight" size={18} />
+  </span>
+</article>
+
+<style>
+  .service {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+    transition:
+      transform 0.25s,
+      box-shadow 0.25s,
+      border-color 0.25s;
+  }
+
+  .service:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: #f3c7a6;
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--brand-soft);
+    color: var(--brand);
+    transition:
+      background-color 0.25s,
+      color 0.25s;
+  }
+
+  .service:hover .icon {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* Whole card is clickable via the heading link. */
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .title a:focus-visible {
+    outline: none;
+  }
+
+  .service:has(.title a:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  p {
+    color: var(--ink-2);
+    flex: 1;
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--brand);
+    font-weight: 700;
+  }
+
+  .more :global(svg) {
+    transition: transform 0.2s;
+  }
+
+  .service:hover .more :global(svg) {
+    transform: translateX(4px);
+  }
+</style>
