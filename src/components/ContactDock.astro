@@ -1,0 +1,142 @@
+---
+import Icon from './Icon.astro'
+import { clinic } from '../data/clinic'
+import { route, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+---
+
+<aside aria-label={lang === 'vi' ? 'Liên hệ nhanh' : 'Quick contact'}>
+<!-- Mobile: a fixed bottom bar with the three actions that matter most. -->
+<div class="dock">
+  <a href={clinic.phoneHref} class="dock-call">
+    <Icon name="phone" size={22} />
+    <span>{tr(ui.callShort, lang)}</span>
+  </a>
+  <a href={clinic.zalo} target="_blank" rel="noopener" class="dock-zalo">
+    <img src="/zalo-icon.svg" alt="" width="22" height="22" />
+    <span>Zalo</span>
+  </a>
+  <a href={`${route('contact', lang)}#dat-lich`} class="dock-book">
+    <Icon name="calendar" size={22} />
+    <span>{tr(ui.book, lang)}</span>
+  </a>
+</div>
+
+<!-- Desktop: a floating Zalo button. -->
+<a class="zalo-fab" href={clinic.zalo} target="_blank" rel="noopener">
+  <img src="/zalo-icon.svg" alt="" width="56" height="56" />
+  <span class="zalo-fab-label">{lang === 'vi' ? 'Nhắn Zalo cho bác sĩ' : 'Chat with the vet on Zalo'}</span>
+</a>
+</aside>
+
+<style>
+  .dock {
+    display: none;
+  }
+
+  .zalo-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .zalo-fab img {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgb(0 104 255 / 35%);
+    transition: transform 0.2s;
+  }
+
+  .zalo-fab:hover img {
+    transform: scale(1.08);
+  }
+
+  .zalo-fab-label {
+    order: -1;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transform: translateX(8px);
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
+    pointer-events: none;
+  }
+
+  .zalo-fab:hover .zalo-fab-label,
+  .zalo-fab:focus-visible .zalo-fab-label {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 760px) {
+    .zalo-fab {
+      display: none;
+    }
+
+    .dock {
+      position: fixed;
+      inset: auto 0 0;
+      z-index: 45;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.4fr;
+      gap: 8px;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+      background: rgb(255 255 255 / 96%);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -6px 24px rgb(74 40 20 / 10%);
+    }
+
+    .dock a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+
+    .dock-call {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .dock-zalo {
+      background: var(--zalo);
+      color: #fff;
+    }
+
+    .dock-book {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .dock a:hover {
+      color: #fff;
+      filter: brightness(0.92);
+    }
+
+    :global(body) {
+      padding-bottom: calc(64px + env(safe-area-inset-bottom));
+    }
+  }
+</style>

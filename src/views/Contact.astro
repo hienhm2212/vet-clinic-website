@@ -1,0 +1,193 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import Icon from '../components/Icon.astro'
+import BookingForm from '../components/BookingForm.astro'
+import MapCard from '../components/MapCard.astro'
+import OpenStatus from '../components/OpenStatus.astro'
+import Faq from '../components/Faq.astro'
+import { clinic } from '../data/clinic'
+import { generalFaqs } from '../data/services'
+import { breadcrumbSchema, faqSchema } from '../lib/schema'
+import { route, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const vi = lang === 'vi'
+const site = Astro.site!
+
+const crumbs = [
+  { name: tr(ui.nav.home, lang), path: route('home', lang) },
+  { name: tr(ui.nav.contact, lang), path: route('contact', lang) },
+]
+---
+
+<Base
+  lang={lang}
+  title={vi ? 'Liên hệ & đặt lịch khám thú y – Bình Mỹ, Củ Chi' : 'Contact & Book a Vet Visit – Binh My, Cu Chi'}
+  description={vi
+    ? 'Đặt lịch khám cho chó mèo tại PKTY Huỳnh Như: 138 Hà Duy Phiên, Bình Mỹ, TP.HCM. Gọi hoặc Zalo 0961 291 597. Mở cửa 8:00–20:00 tất cả các ngày.'
+    : 'Book a visit for your dog or cat at Huynh Nhu Vet: 138 Ha Duy Phien, Binh My, HCMC. Call or Zalo 0961 291 597. Open 8 AM–8 PM every day.'}
+  alternates={{ vi: route('contact', 'vi'), en: route('contact', 'en') }}
+  jsonLd={[breadcrumbSchema(site, crumbs), faqSchema(generalFaqs, lang)]}
+>
+  <PageHero
+    lang={lang}
+    crumbs={crumbs}
+    title={vi ? 'Liên hệ & đặt lịch khám' : 'Contact & book a visit'}
+    lead={vi
+      ? 'Gọi điện, nhắn Zalo hoặc gửi yêu cầu bên dưới — bác sĩ sẽ liên hệ lại để xác nhận lịch khám cho bé.'
+      : 'Call, message us on Zalo or send the request below — the vet will get back to you to confirm.'}
+  >
+    <div class="hero-status"><OpenStatus lang={lang} /></div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container layout">
+      <div id="dat-lich" class="form-col">
+        <h2>{vi ? 'Gửi yêu cầu đặt lịch' : 'Request an appointment'}</h2>
+        <p class="note">
+          <Icon name="heartPulse" size={20} />
+          <span>
+            {vi ? 'Trường hợp khẩn cấp, vui lòng ' : 'For emergencies, please '}
+            <a href={clinic.phoneHref}><strong>{vi ? 'gọi ngay' : 'call'} {clinic.phone}</strong></a>
+            {vi ? ' thay vì gửi form.' : ' instead of using the form.'}
+          </span>
+        </p>
+        <BookingForm lang={lang} />
+      </div>
+
+      <aside class="info-col">
+        <h2>{vi ? 'Thông tin liên hệ' : 'Contact details'}</h2>
+        <address class="info card">
+          <a class="row" href={clinic.phoneHref}>
+            <span class="i"><Icon name="phone" /></span>
+            <span><small>{tr(ui.phone, lang)}</small><strong>{clinic.phone}</strong></span>
+          </a>
+          <a class="row" href={clinic.zalo} target="_blank" rel="noopener">
+            <span class="i i--zalo"><img src="/zalo-icon.svg" alt="" width="24" height="24" /></span>
+            <span><small>Zalo</small><strong>{clinic.phone}</strong></span>
+          </a>
+          <a class="row" href={clinic.directionsUrl} target="_blank" rel="noopener">
+            <span class="i"><Icon name="mapPin" /></span>
+            <span><small>{tr(ui.address, lang)}</small><strong>{tr(clinic.address.full, lang)}</strong><small>{tr(clinic.address.note, lang)}</small></span>
+          </a>
+          <div class="row">
+            <span class="i"><Icon name="clock" /></span>
+            <span><small>{tr(ui.hours, lang)}</small><strong>{tr(ui.everyDay, lang)}</strong><span>{clinic.hours.open} – {clinic.hours.close}</span></span>
+          </div>
+          <div class="row">
+            <span class="i"><Icon name="stethoscope" /></span>
+            <span><small>{tr(ui.doctor, lang)}</small><strong>{tr(clinic.doctor.name, lang)}</strong></span>
+          </div>
+        </address>
+        <MapCard lang={lang} />
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="faq-title">
+    <div class="container narrow">
+      <Faq faqs={generalFaqs} lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-status {
+    margin-top: 20px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(32px, 5vw, 56px);
+    align-items: start;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    margin-bottom: 18px;
+  }
+
+  .note {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #fef3c7;
+    color: #78350f;
+  }
+
+  .note :global(svg) {
+    flex: none;
+    margin-top: 3px;
+  }
+
+  .note a {
+    color: #78350f;
+  }
+
+  .info {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 20px;
+    padding: 12px;
+    font-style: normal;
+  }
+
+  .row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px;
+    border-radius: 14px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  a.row:hover {
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+
+  .row > span:last-child {
+    display: grid;
+    line-height: 1.4;
+  }
+
+  .row small {
+    color: var(--ink-2);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .i {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .i--zalo {
+    background: #e5efff;
+  }
+
+  .narrow {
+    max-width: 860px;
+  }
+
+  @media (max-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

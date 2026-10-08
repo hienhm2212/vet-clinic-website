@@ -1,0 +1,255 @@
+---
+import { Picture, getImage } from 'astro:assets'
+import Icon from './Icon.astro'
+import { photos, galleryOrder, type PhotoKey } from '../data/photos'
+import { tr, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+  keys?: PhotoKey[]
+}
+const { lang, keys = galleryOrder } = Astro.props
+
+const items = await Promise.all(
+  keys.map(async key => {
+    const photo = photos[key]
+    const large = await getImage({ src: photo.src, format: 'webp', quality: 82 })
+    return { key, photo, large: large.src }
+  }),
+)
+const L = {
+  close: lang === 'vi' ? 'Đóng' : 'Close',
+  prev: lang === 'vi' ? 'Ảnh trước' : 'Previous photo',
+  next: lang === 'vi' ? 'Ảnh tiếp theo' : 'Next photo',
+  open: lang === 'vi' ? 'Phóng to ảnh' : 'Enlarge photo',
+}
+---
+
+<div class="gallery" data-gallery>
+  <ul class="grid">
+    {
+      items.map(({ key, photo, large }, i) => (
+        <li class={`item item--${key}`} data-reveal style={`--reveal-delay:${(i % 3) * 0.06}s`}>
+          <button
+            type="button"
+            data-full={large}
+            data-alt={tr(photo.alt, lang)}
+            data-caption={tr(photo.caption, lang)}
+            aria-label={`${L.open}: ${tr(photo.caption, lang)}`}
+          >
+            <Picture
+              src={photo.src}
+              formats={['avif', 'webp']}
+              alt={tr(photo.alt, lang)}
+              widths={[photo.src.width]}
+              sizes="(max-width: 600px) 50vw, 33vw"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="caption">{tr(photo.caption, lang)}</span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="lightbox" aria-label={lang === 'vi' ? 'Xem ảnh' : 'Photo viewer'}>
+    <figure>
+      <img alt="" />
+      <figcaption></figcaption>
+    </figure>
+    <button type="button" class="lb-btn lb-close" data-close aria-label={L.close}><Icon name="x" /></button>
+    <button type="button" class="lb-btn lb-prev" data-step="-1" aria-label={L.prev}><Icon name="arrowRight" /></button>
+    <button type="button" class="lb-btn lb-next" data-step="1" aria-label={L.next}><Icon name="arrowRight" /></button>
+  </dialog>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach(gallery => {
+    const dialog = gallery.querySelector('dialog')!
+    const img = dialog.querySelector('img')!
+    const caption = dialog.querySelector('figcaption')!
+    const triggers = [...gallery.querySelectorAll<HTMLButtonElement>('button[data-full]')]
+    let index = 0
+
+    const show = (i: number) => {
+      index = (i + triggers.length) % triggers.length
+      const t = triggers[index]
+      img.src = t.dataset.full!
+      img.alt = t.dataset.alt!
+      caption.textContent = t.dataset.caption!
+    }
+
+    triggers.forEach((t, i) =>
+      t.addEventListener('click', () => {
+        show(i)
+        dialog.showModal()
+      }),
+    )
+    dialog.querySelectorAll<HTMLButtonElement>('[data-step]').forEach(b =>
+      b.addEventListener('click', () => show(index + Number(b.dataset.step))),
+    )
+    dialog.querySelector('[data-close]')!.addEventListener('click', () => dialog.close())
+    // Click on the backdrop closes
+    dialog.addEventListener('click', e => {
+      if (e.target === dialog) dialog.close()
+    })
+    dialog.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') show(index - 1)
+      if (e.key === 'ArrowRight') show(index + 1)
+    })
+    dialog.addEventListener('close', () => triggers[index]?.focus())
+  })
+</script>
+
+<style>
+  .grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 220px;
+    grid-auto-flow: dense;
+    gap: 14px;
+  }
+
+  .item {
+    grid-row: span 2;
+  }
+
+  .item--meo,
+  .item--meo2 {
+    grid-row: span 1;
+    grid-column: span 2;
+  }
+
+  .item button {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: zoom-in;
+    background: var(--bg-warm);
+  }
+
+  .item :global(picture),
+  .item :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .item :global(img) {
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .item button:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .caption {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 36px 16px 14px;
+    background: linear-gradient(to top, rgb(42 26 18 / 80%), transparent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .lightbox {
+    width: min(92vw, 900px);
+    max-height: 92vh;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius);
+    background: #120b07;
+    color: #fff;
+    overflow: visible;
+  }
+
+  .lightbox::backdrop {
+    background: rgb(18 11 7 / 88%);
+  }
+
+  .lightbox figure {
+    display: grid;
+  }
+
+  .lightbox img {
+    width: 100%;
+    max-height: calc(92vh - 60px);
+    object-fit: contain;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .lightbox figcaption {
+    padding: 16px 20px;
+    font-weight: 700;
+  }
+
+  .lb-btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ink);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+  }
+
+  .lb-close {
+    top: -16px;
+    right: -16px;
+  }
+
+  .lb-prev,
+  .lb-next {
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .lb-prev {
+    left: -20px;
+    rotate: 180deg;
+  }
+
+  .lb-next {
+    right: -20px;
+  }
+
+  @media (max-width: 760px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 170px;
+      gap: 10px;
+    }
+
+    .item--meo,
+    .item--meo2 {
+      grid-column: span 2;
+    }
+
+    .lb-close {
+      top: 8px;
+      right: 8px;
+    }
+
+    .lb-prev {
+      left: 8px;
+    }
+
+    .lb-next {
+      right: 8px;
+    }
+  }
+</style>

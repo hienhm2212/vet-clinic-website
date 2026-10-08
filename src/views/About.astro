@@ -1,0 +1,305 @@
+---
+import { Picture } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import Icon from '../components/Icon.astro'
+import Gallery from '../components/Gallery.astro'
+import Reviews from '../components/Reviews.astro'
+import CtaBand from '../components/CtaBand.astro'
+import { clinic } from '../data/clinic'
+import { photos } from '../data/photos'
+import { breadcrumbSchema } from '../lib/schema'
+import { route, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const vi = lang === 'vi'
+const site = Astro.site!
+
+const crumbs = [
+  { name: tr(ui.nav.home, lang), path: route('home', lang) },
+  { name: tr(ui.nav.about, lang), path: route('about', lang) },
+]
+
+const values = [
+  {
+    icon: 'microscope' as const,
+    title: { vi: 'Chẩn đoán trước, điều trị sau', en: 'Diagnose first, then treat' },
+    text: {
+      vi: 'Máy siêu âm và xét nghiệm ngay tại phòng khám giúp tìm đúng bệnh, tránh dùng thuốc tràn lan.',
+      en: 'On-site ultrasound and lab tests help us find the real problem and avoid unnecessary medication.',
+    },
+  },
+  {
+    icon: 'heart' as const,
+    title: { vi: 'Nhẹ nhàng với từng bé', en: 'Gentle with every pet' },
+    text: {
+      vi: 'Bé được giữ, vuốt ve và trấn an trong suốt quá trình khám để bớt sợ hãi.',
+      en: 'Pets are held, comforted and reassured throughout the visit to keep stress low.',
+    },
+  },
+  {
+    icon: 'message' as const,
+    title: { vi: 'Giải thích rõ ràng', en: 'Clear explanations' },
+    text: {
+      vi: 'Chủ nuôi luôn được giải thích tình trạng, lựa chọn điều trị và chi phí trước khi quyết định.',
+      en: 'You always hear the diagnosis, treatment options and costs before you decide.',
+    },
+  },
+  {
+    icon: 'shieldCheck' as const,
+    title: { vi: 'An toàn & sạch sẽ', en: 'Safe & clean' },
+    text: {
+      vi: 'Dụng cụ được vô trùng, vắc-xin bảo quản lạnh đúng quy chuẩn, khu vực khám vệ sinh thường xuyên.',
+      en: 'Sterilised instruments, properly refrigerated vaccines and exam areas cleaned throughout the day.',
+    },
+  },
+]
+---
+
+<Base
+  lang={lang}
+  title={vi ? 'Giới thiệu phòng khám & bác sĩ Huỳnh Như' : 'About the Clinic & Dr. Huynh Nhu'}
+  description={vi
+    ? 'Phòng Khám Thú Y Huỳnh Như do BSTY Trần Thị Huỳnh Như phụ trách, hơn 5 năm kinh nghiệm chăm sóc chó mèo tại Bình Mỹ, Củ Chi. Tận tâm, chẩn đoán chính xác, chi phí hợp lý.'
+    : 'Huynh Nhu Veterinary Clinic is led by Dr. Tran Thi Huynh Nhu, with 5+ years caring for dogs and cats in Binh My, Cu Chi. Caring, accurate and fairly priced.'}
+  alternates={{ vi: route('about', 'vi'), en: route('about', 'en') }}
+  jsonLd={[breadcrumbSchema(site, crumbs)]}
+>
+  <PageHero
+    lang={lang}
+    crumbs={crumbs}
+    title={vi ? 'Phòng khám được xây dựng bằng tình yêu thú cưng' : 'A clinic built on love for animals'}
+    lead={vi
+      ? 'Chúng tôi tin rằng mỗi thú cưng đều xứng đáng được đối xử như người thân trong gia đình.'
+      : 'We believe every pet deserves to be treated like a member of the family.'}
+  />
+
+  <section class="section">
+    <div class="container story">
+      <div class="story-media" data-reveal>
+        <Picture
+          src={photos.clinicRoom.src}
+          formats={['avif', 'webp']}
+          alt={tr(photos.clinicRoom.alt, lang)}
+          widths={[photos.clinicRoom.src.width]}
+          sizes="(max-width: 900px) 90vw, 400px"
+          loading="eager"
+        />
+      </div>
+      <div class="story-copy">
+        <span class="eyebrow"><Icon name="paw" /> {vi ? 'Câu chuyện của chúng tôi' : 'Our story'}</span>
+        <h2>{vi ? 'Gần nhà, tận tâm, đáng tin cậy' : 'Close to home, caring and trusted'}</h2>
+        <p>
+          {
+            vi
+              ? `${tr(clinic.name, lang)} nằm tại ${tr(clinic.address.full, lang)} (trước đây thuộc huyện Củ Chi). Phòng khám ra đời với mong muốn mang đến cho người nuôi chó mèo ở Bình Mỹ, Củ Chi và Hóc Môn một nơi khám chữa bệnh gần nhà mà vẫn bài bản, tận tâm.`
+              : `${tr(clinic.name, lang)} is located at ${tr(clinic.address.full, lang)} (formerly Cu Chi District). We opened to give pet owners in Binh My, Cu Chi and Hoc Mon a vet close to home that is still thorough and caring.`
+          }
+        </p>
+        <p>
+          {
+            vi
+              ? 'Nhiều gia đình tìm đến chúng tôi sau khi bé đã điều trị ở nhiều nơi chưa khỏi. Với chúng tôi, điều quan trọng nhất là tìm đúng nguyên nhân, điều trị đúng cách và chỉ làm những gì bé thật sự cần.'
+              : 'Many families come to us after treatment elsewhere did not help. For us, what matters most is finding the real cause, treating it properly and doing only what your pet truly needs.'
+          }
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="doctor-title">
+    <div class="container doctor">
+      <div class="doctor-card card" data-reveal>
+        <span class="avatar" aria-hidden="true"><Icon name="stethoscope" size={44} /></span>
+        <div>
+          <span class="eyebrow">{tr(ui.doctor, lang)}</span>
+          <h2 id="doctor-title">{tr(clinic.doctor.name, lang)}</h2>
+          <p>
+            {
+              vi
+                ? `Bác sĩ thú y với hơn ${clinic.yearsExperience} năm kinh nghiệm khám và điều trị cho chó mèo. Bác sĩ Như trực tiếp thăm khám từng bé, nổi tiếng với sự nhiệt tình, vui vẻ và tay nghề vững vàng — như chính những gì khách hàng chia sẻ trên Google.`
+                : `A veterinarian with more than ${clinic.yearsExperience} years of experience treating dogs and cats. Dr. Nhu examines every patient personally and is known for her warmth, cheerfulness and skill — just as our clients say on Google.`
+            }
+          </p>
+          <ul class="tags">
+            <li>{vi ? 'Nội khoa chó mèo' : 'Small-animal medicine'}</li>
+            <li>{vi ? 'Siêu âm chẩn đoán' : 'Diagnostic ultrasound'}</li>
+            <li>{vi ? 'Tiêm phòng' : 'Vaccinations'}</li>
+            <li>{vi ? 'Phẫu thuật' : 'Surgery'}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="values-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow"><Icon name="heart" /> {vi ? 'Cách chúng tôi làm việc' : 'How we work'}</span>
+        <h2 id="values-title">{vi ? 'Những điều chúng tôi cam kết' : 'Our promises to you'}</h2>
+      </div>
+      <ul class="values">
+        {
+          values.map((v, i) => (
+            <li class="card" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+              <span class="v-icon">
+                <Icon name={v.icon} size={26} />
+              </span>
+              <h3>{tr(v.title, lang)}</h3>
+              <p>{tr(v.text, lang)}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Reviews lang={lang} />
+
+  <section class="section" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow"><Icon name="paw" /> {vi ? 'Hình ảnh' : 'Gallery'}</span>
+        <h2 id="gallery-title">{vi ? 'Một ngày ở phòng khám' : 'A day at the clinic'}</h2>
+      </div>
+      <Gallery lang={lang} />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .story {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .story-media :global(img) {
+    width: 100%;
+    max-width: 400px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+
+  .story-copy p {
+    margin-top: 16px;
+    color: var(--ink-2);
+    font-size: 1.08rem;
+  }
+
+  .story-copy h2 {
+    margin-bottom: 4px;
+  }
+
+  .doctor-card {
+    display: flex;
+    gap: clamp(20px, 4vw, 40px);
+    align-items: flex-start;
+    padding: clamp(24px, 5vw, 48px);
+    background: linear-gradient(135deg, #fff, var(--bg-warm));
+  }
+
+  .avatar {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 28px;
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .doctor-card p {
+    margin-top: 14px;
+    color: var(--ink-2);
+    font-size: 1.08rem;
+    max-width: 70ch;
+  }
+
+  .tags {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .tags li {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: #0b5d57;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .values {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .values li {
+    padding: 28px 24px;
+  }
+
+  .values h3 {
+    margin-block: 16px 8px;
+    font-size: 1.15rem;
+  }
+
+  .values p {
+    color: var(--ink-2);
+    font-size: 0.97rem;
+  }
+
+  .v-icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  @media (max-width: 960px) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+
+    .story-media {
+      justify-self: center;
+    }
+
+    .values {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .values {
+      grid-template-columns: 1fr;
+    }
+
+    .doctor-card {
+      flex-direction: column;
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+    }
+  }
+</style>

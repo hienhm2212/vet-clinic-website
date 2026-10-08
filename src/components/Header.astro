@@ -1,0 +1,287 @@
+---
+import Icon from './Icon.astro'
+import Logo from './Logo.astro'
+import { clinic } from '../data/clinic'
+import { route, tr, ui, type Lang, type RouteKey } from '../i18n'
+
+interface Props {
+  lang: Lang
+  alternates: Record<Lang, string>
+}
+
+const { lang, alternates } = Astro.props
+const otherLang: Lang = lang === 'vi' ? 'en' : 'vi'
+const path = Astro.url.pathname
+
+const links: { key: RouteKey; label: string }[] = [
+  { key: 'home', label: tr(ui.nav.home, lang) },
+  { key: 'services', label: tr(ui.nav.services, lang) },
+  { key: 'about', label: tr(ui.nav.about, lang) },
+  { key: 'contact', label: tr(ui.nav.contact, lang) },
+]
+
+const isActive = (key: RouteKey) => {
+  const href = route(key, lang)
+  return key === 'home' ? path === href : path.startsWith(href)
+}
+---
+
+<header class="site-header" data-header>
+  <div class="container bar">
+    <a class="brand" href={route('home', lang)} aria-label={tr(clinic.name, lang)}>
+      <Logo />
+      <span class="brand-text">
+        <span class="brand-name">{tr(clinic.shortName, lang)}</span>
+        <span class="brand-tag">{lang === 'vi' ? 'Phòng khám thú y · Bình Mỹ' : 'Veterinary clinic · Binh My'}</span>
+      </span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+    >
+      <Icon name="menu" class="icon-open" />
+      <Icon name="x" class="icon-close" />
+      <span class="sr-only">{tr(ui.menu, lang)}</span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label={lang === 'vi' ? 'Điều hướng chính' : 'Main navigation'} data-nav>
+      <ul class="nav-links">
+        {
+          links.map(link => (
+            <li>
+              <a href={route(link.key, lang)} aria-current={isActive(link.key) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="nav-actions">
+        <a class="lang-link" href={alternates[otherLang]} hreflang={otherLang} lang={otherLang}>
+          <Icon name="globe" size={18} />
+          <span>{otherLang.toUpperCase()}</span>
+          <span class="sr-only">– {tr(ui.switchLang, lang)}</span>
+        </a>
+        <a class="btn btn--primary nav-call" href={clinic.phoneHref}>
+          <Icon name="phone" />
+          <span>{clinic.phone}</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(255 250 244 / 92%);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .site-header[data-scrolled] {
+    border-color: var(--line);
+    box-shadow: 0 4px 24px rgb(74 40 20 / 8%);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: var(--header-h);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .brand:hover {
+    color: var(--ink);
+  }
+
+  .brand-text {
+    display: grid;
+    line-height: 1.1;
+  }
+
+  .brand-name {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .brand-tag {
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    font-weight: 700;
+  }
+
+  .nav-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 999px;
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .nav-links a:hover {
+    background: var(--brand-soft);
+    color: var(--brand-hover);
+  }
+
+  .nav-links a[aria-current='page'] {
+    color: var(--brand);
+    background: var(--brand-soft);
+  }
+
+  .nav,
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .lang-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    background: var(--surface);
+  }
+
+  .lang-link:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+
+  .nav-call {
+    min-height: 44px;
+    padding: 10px 18px;
+  }
+
+  .menu-toggle {
+    display: none;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    cursor: pointer;
+  }
+
+  .menu-toggle :global(.icon-close),
+  .menu-toggle[aria-expanded='true'] :global(.icon-open) {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded='true'] :global(.icon-close) {
+    display: block;
+  }
+
+  /* Mobile: a slide-down menu when JS is available, a simple wrapped nav otherwise. */
+  @media (max-width: 960px) {
+    .bar {
+      flex-wrap: wrap;
+    }
+
+    .nav {
+      flex-wrap: wrap;
+      padding-bottom: 12px;
+    }
+
+    :global(.js) .menu-toggle {
+      display: inline-flex;
+    }
+
+    :global(.js) .bar {
+      flex-wrap: nowrap;
+    }
+
+    :global(.js) .nav {
+      position: fixed;
+      inset: var(--header-h) 0 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 16px;
+      padding: 20px var(--gutter) 28px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 24px 40px rgb(74 40 20 / 14%);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition:
+        opacity 0.2s,
+        transform 0.2s,
+        visibility 0s 0.2s;
+    }
+
+    :global(.js) .nav[data-open] {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 0.2s,
+        transform 0.2s;
+    }
+
+    :global(.js) .nav-links {
+      flex-direction: column;
+    }
+
+    :global(.js) .nav-links a {
+      padding: 14px 16px;
+      font-size: 1.1rem;
+      border-radius: 14px;
+    }
+
+    :global(.js) .nav-actions {
+      justify-content: space-between;
+    }
+
+    :global(.js) .nav-call {
+      flex: 1;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .brand-tag {
+      display: none;
+    }
+  }
+</style>

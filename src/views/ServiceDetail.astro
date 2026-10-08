@@ -1,0 +1,290 @@
+---
+import { Picture } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import Icon from '../components/Icon.astro'
+import Faq from '../components/Faq.astro'
+import CtaBand from '../components/CtaBand.astro'
+import { clinic } from '../data/clinic'
+import { photos } from '../data/photos'
+import { services, type Service } from '../data/services'
+import { breadcrumbSchema, faqSchema, serviceSchema } from '../lib/schema'
+import { route, serviceRoute, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+  service: Service
+}
+const { lang, service } = Astro.props
+const vi = lang === 'vi'
+const site = Astro.site!
+const name = tr(service.title, lang)
+const photo = service.photo ? photos[service.photo] : undefined
+const others = services.filter(s => s !== service)
+
+const crumbs = [
+  { name: tr(ui.nav.home, lang), path: route('home', lang) },
+  { name: tr(ui.nav.services, lang), path: route('services', lang) },
+  { name, path: serviceRoute(service.slug, lang) },
+]
+---
+
+<Base
+  lang={lang}
+  title={tr(service.metaTitle, lang)}
+  description={tr(service.metaDescription, lang)}
+  alternates={{ vi: serviceRoute(service.slug, 'vi'), en: serviceRoute(service.slug, 'en') }}
+  jsonLd={[breadcrumbSchema(site, crumbs), serviceSchema(site, service, lang), faqSchema(service.faqs, lang)]}
+>
+  <PageHero lang={lang} crumbs={crumbs} title={name} lead={tr(service.short, lang)}>
+    <div class="hero-actions">
+      <a class="btn btn--primary" href={`${route('contact', lang)}#dat-lich`}>
+        <Icon name="calendar" />
+        {tr(ui.book, lang)}
+      </a>
+      <a class="btn btn--outline" href={clinic.phoneHref}>
+        <Icon name="phone" />
+        {clinic.phone}
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container layout">
+      <article class="content">
+        <p class="intro">{tr(service.intro, lang)}</p>
+
+        <h2>{vi ? 'Khi nào nên đưa bé đến?' : 'When should you come in?'}</h2>
+        <ul class="check-list">
+          {
+            service.signs.map(s => (
+              <li>
+                <Icon name="check" />
+                <span>{tr(s, lang)}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>{vi ? 'Quy trình tại phòng khám' : 'What happens at the visit'}</h2>
+        <ol class="steps">
+          {
+            service.steps.map((s, i) => (
+              <li>
+                <span class="num" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3>{tr(s.title, lang)}</h3>
+                  <p>{tr(s.text, lang)}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="faq-wrap">
+          <Faq faqs={service.faqs} lang={lang} />
+        </div>
+      </article>
+
+      <aside class="side">
+        {
+          photo && (
+            <Picture
+              src={photo.src}
+              formats={['avif', 'webp']}
+              alt={tr(photo.alt, lang)}
+              widths={[photo.src.width]}
+              sizes="(max-width: 960px) 90vw, 360px"
+              class="side-photo"
+              loading="lazy"
+            />
+          )
+        }
+        <div class="side-card card">
+          <h2>{vi ? 'Đặt lịch khám' : 'Book a visit'}</h2>
+          <p>{tr(ui.callFirst, lang)}</p>
+          <a class="btn btn--primary btn--block" href={clinic.phoneHref}>
+            <Icon name="phone" />
+            {clinic.phone}
+          </a>
+          <a class="btn btn--zalo btn--block" href={clinic.zalo} target="_blank" rel="noopener">
+            <img src="/zalo-icon.svg" alt="" width="20" height="20" />
+            {tr(ui.zalo, lang)}
+          </a>
+          <ul class="facts">
+            <li><Icon name="clock" size={18} /> {tr(ui.everyDay, lang)}: {clinic.hours.open} – {clinic.hours.close}</li>
+            <li><Icon name="mapPin" size={18} /> {tr(clinic.address.full, lang)}</li>
+          </ul>
+        </div>
+
+        <nav class="side-card card" aria-labelledby="other-services">
+          <h2 id="other-services">{vi ? 'Dịch vụ khác' : 'Other services'}</h2>
+          <ul class="others">
+            {
+              others.map(s => (
+                <li>
+                  <a href={serviceRoute(s.slug, lang)}>
+                    <Icon name={s.icon} size={20} />
+                    {tr(s.title, lang)}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .content > h2 {
+    margin: 48px 0 20px;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  }
+
+  .intro {
+    font-size: 1.15rem;
+  }
+
+  .steps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+
+  .steps li {
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .steps h3 {
+    font-size: 1.12rem;
+  }
+
+  .steps p {
+    color: var(--ink-2);
+    margin-top: 2px;
+  }
+
+  .faq-wrap {
+    margin-top: 48px;
+  }
+
+  .faq-wrap :global(h2) {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  }
+
+  .side {
+    position: sticky;
+    top: calc(var(--header-h) + 20px);
+    display: grid;
+    gap: 20px;
+  }
+
+  .side :global(.side-photo) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .side-card {
+    display: grid;
+    gap: 12px;
+    padding: 24px;
+  }
+
+  .side-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .side-card > p {
+    color: var(--ink-2);
+    font-size: 0.97rem;
+  }
+
+  .facts,
+  .others {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+    font-size: 0.95rem;
+  }
+
+  .facts li {
+    display: flex;
+    gap: 10px;
+  }
+
+  .facts :global(svg) {
+    flex: none;
+    margin-top: 4px;
+    color: var(--brand);
+  }
+
+  .others a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .others a:hover {
+    background: var(--brand-soft);
+    color: var(--brand-hover);
+  }
+
+  .others :global(svg) {
+    color: var(--brand);
+  }
+
+  @media (max-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .side {
+      position: static;
+    }
+  }
+</style>

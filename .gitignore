@@ -64,3 +64,9 @@ coverage/
 .vite/
 .turbo/
 .parcel-cache/
+
+# Astro / tests
+.astro/
+test-results/
+playwright-report/
+lighthouse-report/

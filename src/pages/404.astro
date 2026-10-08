@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import { clinic } from '../data/clinic'
+import { services } from '../data/services'
+import { route, serviceRoute, tr } from '../i18n'
+---
+
+<Base
+  lang="vi"
+  title="Không tìm thấy trang (404)"
+  description="Trang bạn tìm không tồn tại. Quay lại trang chủ Phòng Khám Thú Y Huỳnh Như hoặc gọi 0961 291 597."
+  alternates={{ vi: '/404/', en: '/404/' }}
+  noindex
+>
+  <section class="section">
+    <div class="container nf">
+      <span class="paw"><Icon name="paw" size={56} /></span>
+      <h1>Ối! Không tìm thấy trang</h1>
+      <p>Trang bạn tìm có thể đã được đổi địa chỉ. <span lang="en">Page not found.</span></p>
+      <div class="actions">
+        <a class="btn btn--primary" href={route('home', 'vi')}>Về trang chủ</a>
+        <a class="btn btn--outline" href={clinic.phoneHref}><Icon name="phone" /> {clinic.phone}</a>
+        <a class="btn btn--outline" href={route('home', 'en')} lang="en">English home</a>
+      </div>
+      <h2>Dịch vụ của phòng khám</h2>
+      <ul>
+        {services.map(s => <li><a href={serviceRoute(s.slug, 'vi')}>{tr(s.title, 'vi')}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .paw {
+    display: inline-grid;
+    place-items: center;
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    background: var(--brand-soft);
+    color: var(--brand);
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-top: 12px;
+    color: var(--ink-2);
+    font-size: 1.1rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-block: 28px 48px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    font-weight: 700;
+  }
+</style>

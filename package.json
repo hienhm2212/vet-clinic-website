@@ -1,20 +1,28 @@
 {
-  "name": "huynh-nhu-vet",
+  "name": "pkty-huynh-nhu",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "test": "playwright test",
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "og": "node scripts/generate-images.mjs"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "gsap": "^3.12.5"
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/baloo-2": "^5.3.0",
+    "@fontsource/nunito": "^5.3.0",
+    "astro": "^7.3.7",
+    "sharp": "^0.35.5",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.1"
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.64.0",
+    "lighthouse": "^13.5.0"
   }
 }

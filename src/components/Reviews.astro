@@ -1,0 +1,126 @@
+---
+import Icon from './Icon.astro'
+import { clinic } from '../data/clinic'
+import { reviews } from '../data/reviews'
+import { tr, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+---
+
+<section class="section section--warm" aria-labelledby="reviews-title">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="eyebrow"><Icon name="star" /> {lang === 'vi' ? 'Đánh giá Google' : 'Google reviews'}</span>
+      <h2 id="reviews-title">
+        {lang === 'vi' ? 'Khách hàng nói gì về ' : 'What pet parents say about '}
+        <span class="text-brand">{lang === 'vi' ? 'bác sĩ Như' : 'Dr. Nhu'}</span>
+      </h2>
+      <p>
+        {
+          lang === 'vi'
+            ? 'Những chia sẻ thật từ các gia đình đã tin tưởng gửi gắm thú cưng cho phòng khám.'
+            : 'Real words from families who have trusted us with their pets.'
+        }
+      </p>
+    </div>
+
+    <ul class="grid">
+      {
+        reviews.map((r, i) => (
+          <li class="review card" data-reveal style={`--reveal-delay:${(i % 2) * 0.08}s`}>
+            <figure>
+              <div class="stars" role="img" aria-label={lang === 'vi' ? '5 trên 5 sao' : '5 out of 5 stars'}>
+                {Array.from({ length: 5 }, () => <Icon name="star" size={18} />)}
+              </div>
+              <blockquote lang={lang}>
+                <p>“{tr(r.text, lang)}”</p>
+              </blockquote>
+              <figcaption>
+                <span class="avatar" aria-hidden="true">{r.author.charAt(0)}</span>
+                <span>
+                  <strong>{r.author}</strong>
+                  <small>Google · {tr(r.when, lang)}</small>
+                </span>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="more">
+      <a class="btn btn--outline" href={clinic.mapsUrl} target="_blank" rel="noopener">
+        {lang === 'vi' ? 'Xem thêm đánh giá trên Google Maps' : 'Read more reviews on Google Maps'}
+        <Icon name="arrowRight" />
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 20px;
+  }
+
+  .review {
+    padding: 26px;
+  }
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+  }
+
+  .stars {
+    display: flex;
+    gap: 2px;
+    color: var(--sun);
+  }
+
+  blockquote {
+    flex: 1;
+    font-size: 1.02rem;
+  }
+
+  figcaption {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  figcaption span:last-child {
+    display: grid;
+    line-height: 1.3;
+  }
+
+  small {
+    color: var(--ink-2);
+    font-size: 0.85rem;
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .more {
+    margin-top: 36px;
+    text-align: center;
+  }
+</style>

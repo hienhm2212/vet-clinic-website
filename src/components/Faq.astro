@@ -1,0 +1,83 @@
+---
+import Icon from './Icon.astro'
+import type { Faq } from '../data/services'
+import { tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  faqs: Faq[]
+  lang: Lang
+  title?: string
+  headingId?: string
+}
+const { faqs, lang, title = tr(ui.faq, lang), headingId = 'faq-title' } = Astro.props
+---
+
+<div class="faq">
+  <h2 id={headingId}>{title}</h2>
+  <div class="items">
+    {
+      faqs.map((f, i) => (
+        <details open={i === 0}>
+          <summary>
+            <span>{tr(f.q, lang)}</span>
+            <Icon name="chevronDown" size={22} />
+          </summary>
+          <p>{tr(f.a, lang)}</p>
+        </details>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  h2 {
+    margin-bottom: 24px;
+  }
+
+  .items {
+    display: grid;
+    gap: 12px;
+  }
+
+  details {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: box-shadow 0.2s;
+  }
+
+  details[open] {
+    box-shadow: var(--shadow-sm);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary :global(svg) {
+    flex: none;
+    color: var(--brand);
+    transition: transform 0.2s;
+  }
+
+  details[open] summary :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  details p {
+    padding: 0 22px 20px;
+    color: var(--ink-2);
+  }
+</style>

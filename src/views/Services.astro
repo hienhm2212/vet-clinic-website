@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import ServiceCard from '../components/ServiceCard.astro'
+import Faq from '../components/Faq.astro'
+import CtaBand from '../components/CtaBand.astro'
+import { services, generalFaqs } from '../data/services'
+import { breadcrumbSchema, serviceSchema } from '../lib/schema'
+import { route, tr, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const vi = lang === 'vi'
+const site = Astro.site!
+
+const title = vi ? 'Dịch vụ thú y cho chó mèo tại Bình Mỹ, Củ Chi' : 'Veterinary Services for Dogs & Cats'
+const description = vi
+  ? 'Các dịch vụ tại PKTY Huỳnh Như: khám tổng quát, tiêm phòng, siêu âm & xét nghiệm, điều trị & cấp cứu, phẫu thuật & triệt sản, cạo vôi răng cho chó mèo ở Bình Mỹ, Củ Chi.'
+  : 'Services at Huynh Nhu Vet: wellness exams, vaccinations, ultrasound & lab tests, treatment & urgent care, surgery & spay/neuter and dental care for dogs and cats.'
+
+const crumbs = [
+  { name: tr(ui.nav.home, lang), path: route('home', lang) },
+  { name: tr(ui.nav.services, lang), path: route('services', lang) },
+]
+---
+
+<Base
+  lang={lang}
+  title={title}
+  description={description}
+  alternates={{ vi: route('services', 'vi'), en: route('services', 'en') }}
+  jsonLd={[breadcrumbSchema(site, crumbs), ...services.map(s => serviceSchema(site, s, lang))]}
+>
+  <PageHero
+    lang={lang}
+    crumbs={crumbs}
+    title={vi ? 'Dịch vụ thú y cho chó mèo' : 'Veterinary services for dogs & cats'}
+    lead={vi
+      ? 'Phòng khám cung cấp đầy đủ dịch vụ chăm sóc sức khỏe cho chó mèo — từ phòng bệnh, chẩn đoán đến điều trị — với trang thiết bị siêu âm, xét nghiệm ngay tại chỗ.'
+      : 'Complete healthcare for dogs and cats — prevention, diagnosis and treatment — with ultrasound and lab tests right here at the clinic.'}
+  />
+
+  <section class="section">
+    <div class="container grid">
+      {services.map((s, i) => <ServiceCard service={s} lang={lang} index={i} headingLevel="h2" />)}
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="faq-title">
+    <div class="container narrow">
+      <Faq faqs={generalFaqs} lang={lang} />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .narrow {
+    max-width: 860px;
+  }
+
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
