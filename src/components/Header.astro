@@ -30,6 +30,11 @@ const isActive = (key: RouteKey) => {
   <div class="container bar">
     <a class="brand" href={route('home', lang)} aria-label={tr(clinic.name, lang)}>
       <Logo />
+      <svg class="witch-hat seasonal" width="34" height="30" viewBox="0 0 34 30" aria-hidden="true" focusable="false">
+        <path d="M17 1c3 2 5 9 7 18H10C12 11 13 5 17 1z" fill="#2e1065"></path>
+        <path d="M10.6 16h13l.8 3.4H9.8z" fill="#f97316"></path>
+        <ellipse cx="17" cy="21" rx="16" ry="4" fill="#4c1d95"></ellipse>
+      </svg>
       <span class="brand-text">
         <span class="brand-name">{tr(clinic.shortName, lang)}</span>
         <span class="brand-tag">{lang === 'vi' ? 'Phòng khám thú y · Bình Mỹ' : 'Veterinary clinic · Binh My'}</span>
@@ -102,6 +107,7 @@ const isActive = (key: RouteKey) => {
   }
 
   .brand {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -111,6 +117,13 @@ const isActive = (key: RouteKey) => {
 
   .brand:hover {
     color: var(--ink);
+  }
+
+  .witch-hat {
+    position: absolute;
+    top: -14px;
+    left: -6px;
+    rotate: -18deg;
   }
 
   .brand-text {
