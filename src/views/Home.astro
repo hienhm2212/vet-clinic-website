@@ -9,6 +9,8 @@ import Gallery from '../components/Gallery.astro'
 import Faq from '../components/Faq.astro'
 import MapCard from '../components/MapCard.astro'
 import CtaBand from '../components/CtaBand.astro'
+import HeroDecor from '../components/halloween/HeroDecor.astro'
+import HalloweenTips from '../components/halloween/Tips.astro'
 import { clinic } from '../data/clinic'
 import { photos } from '../data/photos'
 import { services, generalFaqs } from '../data/services'
@@ -135,6 +137,7 @@ const steps = [
 
       <div class="hero-media">
         <div class="blob" aria-hidden="true"></div>
+        <HeroDecor />
         <Picture
           src={photos.dog.src}
           formats={['avif', 'webp']}
@@ -197,6 +200,8 @@ const steps = [
       </a>
     </div>
   </section>
+
+  <HalloweenTips lang={lang} />
 
   <!-- SERVICES -->
   <section class="section" aria-labelledby="services-title">
@@ -344,6 +349,17 @@ const steps = [
       radial-gradient(circle at 10% 90%, #d5f5ef 0, transparent 35%),
       var(--bg);
     overflow: hidden;
+  }
+
+  :global(html[data-season='halloween']) .hero {
+    background:
+      radial-gradient(circle at 85% 20%, #ffd8b0 0, transparent 40%),
+      radial-gradient(circle at 10% 90%, #ede9fe 0, transparent 38%),
+      var(--bg);
+  }
+
+  :global(html[data-season='halloween']) .blob {
+    background: linear-gradient(135deg, #fdba74, #f97316);
   }
 
   .hero-grid {

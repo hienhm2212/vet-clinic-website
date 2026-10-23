@@ -27,6 +27,14 @@ Mỗi đoạn chữ có hai bản `{ vi: '…', en: '…' }`.
 Thêm ảnh: chép file vào `src/assets/photos/`, khai báo trong `photos.ts`. Astro tự nén sang AVIF/WebP.
 Nếu đổi logo hoặc thông tin trên ảnh chia sẻ, chạy `npm run og` để tạo lại `public/og-image.jpg` và các icon.
 
+## Trang trí theo mùa (Halloween)
+
+Giao diện Halloween **tự bật từ 15/10 đến hết 1/11** (giờ Việt Nam) rồi tự tắt; không cần sửa code hay deploy lại. Giao diện gồm banner nhắc an toàn cho thú cưng (khách tắt được), dơi, nhện, bí ngô, ma quanh ảnh đầu trang, mũ phù thủy trên logo và mục "Halloween an toàn cho bé" ở trang chủ.
+
+- Đổi ngày bật/tắt: sửa `start` / `end` trong `src/data/season.ts`
+- Xem trước bất kỳ lúc nào: thêm `?season=halloween` vào URL; ẩn đi: `?season=off`
+- Các thành phần nằm trong `src/components/halloween/`
+
 ## Cấu trúc trang
 
 | Tiếng Việt | English |
