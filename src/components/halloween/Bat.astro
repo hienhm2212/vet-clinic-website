@@ -1,15 +1,126 @@
 ---
+/* A cute bat with real wing flaps: each wing is its own group that rotates
+   around the shoulder, and the body bobs against the downstroke. */
 interface Props {
   class?: string
   size?: number
+  /** Seconds per wing beat; vary per instance so bats don't flap in sync. */
+  beat?: number
 }
-const { class: className, size = 56 } = Astro.props
+const { class: className, size = 64, beat = 0.42 } = Astro.props
+const id = `bat-${crypto.randomUUID().slice(0, 6)}`
 ---
 
-<svg class={className} width={size} height={size / 2} viewBox="0 0 64 32" aria-hidden="true" focusable="false">
-  <path
-    d="M32 9c-1.5 0-2.4 1-2.8 2.2L28 8.5l-.6 4C22 8 13 6 4 10c4 1 6.5 3.5 7 7 3-1.5 6.5-1 8.5 1.5 1.5-2 4.5-2.5 6.5-1 .8 3.5 3 6 6 7.5 3-1.5 5.2-4 6-7.5 2-1.5 5-1 6.5 1 2-2.5 5.5-3 8.5-1.5.5-3.5 3-6 7-7-9-4-18-2-23.4 2.5L36 8.5l-1.2 2.7C34.4 10 33.5 9 32 9z"
-    fill="#2e1065"></path>
-  <circle cx="30.3" cy="14.5" r="1.3" fill="#fde68a"></circle>
-  <circle cx="33.7" cy="14.5" r="1.3" fill="#fde68a"></circle>
+<svg class:list={['bat', className]} style={`--beat:${beat}s`} width={size} height={size * 0.6} viewBox="0 0 80 48" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id={`${id}-body`} cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#6d28d9"></stop>
+      <stop offset="1" stop-color="#2e1065"></stop>
+    </radialGradient>
+    <linearGradient id={`${id}-wing`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b21b6"></stop>
+      <stop offset="1" stop-color="#2e1065"></stop>
+    </linearGradient>
+  </defs>
+  <g class="wing wing-l">
+    <path d="M34 22C26 10 12 8 2 16c6 1 8 5 8 9 4-3 9-2 11 2 3-3 8-2 10 2z" fill={`url(#${id}-wing)`}></path>
+    <path d="M33 21 11 14.5M32 23 10.5 24M32 25 21 27" stroke="#8b5cf6" stroke-width="0.9" stroke-linecap="round" opacity="0.6"></path>
+  </g>
+  <g class="wing wing-r">
+    <path d="M46 22c8-12 22-14 32-6-6 1-8 5-8 9-4-3-9-2-11 2-3-3-8-2-10 2z" fill={`url(#${id}-wing)`}></path>
+    <path d="M47 21l22-6.5M48 23l21.5 1M48 25l11 2" stroke="#8b5cf6" stroke-width="0.9" stroke-linecap="round" opacity="0.6"></path>
+  </g>
+  <g class="body">
+    <path d="M33 21 32.5 9.5 38.5 17.5zM47 21l.5-11.5-6 8z" fill={`url(#${id}-body)`}></path>
+    <path d="M34 18.5 33.7 13l2.6 3.6zM46 18.5l.3-5.5-2.6 3.6z" fill="#f9a8d4" opacity="0.7"></path>
+    <ellipse cx="40" cy="27" rx="9.5" ry="10.5" fill={`url(#${id}-body)`}></ellipse>
+    <ellipse cx="40" cy="31" rx="5" ry="5" fill="#7c3aed" opacity="0.35"></ellipse>
+    <g class="eyes">
+      <circle cx="36.3" cy="24.5" r="3.2" fill="#fff"></circle>
+      <circle cx="43.7" cy="24.5" r="3.2" fill="#fff"></circle>
+      <circle cx="36.8" cy="25" r="1.8" fill="#1e1035"></circle>
+      <circle cx="44.2" cy="25" r="1.8" fill="#1e1035"></circle>
+      <circle cx="37.4" cy="24.3" r="0.65" fill="#fff"></circle>
+      <circle cx="44.8" cy="24.3" r="0.65" fill="#fff"></circle>
+    </g>
+    <ellipse cx="33.8" cy="29" rx="2" ry="1.2" fill="#f472b6" opacity="0.55"></ellipse>
+    <ellipse cx="46.2" cy="29" rx="2" ry="1.2" fill="#f472b6" opacity="0.55"></ellipse>
+    <path d="M37.5 30.5q2.5 1.8 5 0" stroke="#1e1035" stroke-width="1" fill="none" stroke-linecap="round"></path>
+    <path d="M38.2 31.1l.7 1.7.7-1.5zM40.4 31.3l.7 1.5.7-1.7z" fill="#fff"></path>
+  </g>
 </svg>
+
+<style>
+  .wing,
+  .body,
+  .eyes {
+    transform-box: fill-box;
+  }
+
+  .wing-l {
+    transform-origin: 95% 40%;
+  }
+
+  .wing-r {
+    transform-origin: 5% 40%;
+  }
+
+  .eyes {
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-season]) .wing-l {
+      animation: flap-l var(--beat) ease-in-out infinite alternate;
+    }
+
+    :global(html[data-season]) .wing-r {
+      animation: flap-r var(--beat) ease-in-out infinite alternate;
+    }
+
+    :global(html[data-season]) .body {
+      animation: bob var(--beat) ease-in-out infinite alternate;
+    }
+
+    :global(html[data-season]) .eyes {
+      animation: blink 5s steps(1, end) infinite;
+    }
+  }
+
+  @keyframes flap-l {
+    from {
+      transform: rotate(-14deg);
+    }
+
+    to {
+      transform: rotate(32deg) scaleY(0.8);
+    }
+  }
+
+  @keyframes flap-r {
+    from {
+      transform: rotate(14deg);
+    }
+
+    to {
+      transform: rotate(-32deg) scaleY(0.8);
+    }
+  }
+
+  @keyframes bob {
+    to {
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    95% {
+      transform: none;
+    }
+
+    96% {
+      transform: scaleY(0.1);
+    }
+  }
+</style>

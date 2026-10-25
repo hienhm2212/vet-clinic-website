@@ -1,6 +1,7 @@
 ---
 import { clinic } from '../../data/clinic'
 import { halloween } from '../../data/season'
+import Pumpkin from './Pumpkin.astro'
 import type { Lang } from '../../i18n'
 
 interface Props {
@@ -12,7 +13,7 @@ const vi = lang === 'vi'
 
 <aside class="season-banner seasonal" aria-label="Halloween" data-season-key={halloween.storageKey}>
   <p>
-    <span aria-hidden="true">🎃</span>{' '}
+    <Pumpkin class="banner-pk" size={26} />
     <strong>{vi ? 'Halloween vui vẻ!' : 'Happy Halloween!'}</strong>{' '}
     {vi ? 'Socola và kẹo không đường rất độc với chó mèo — nếu bé lỡ ăn, ' : 'Chocolate and sugar-free candy are toxic to pets — if yours ate some, '}
     {' '}<a href={clinic.phoneHref}>{vi ? 'gọi ngay' : 'call'} {clinic.phone}</a>.
@@ -58,6 +59,12 @@ const vi = lang === 'vi'
 
   p {
     max-width: 960px;
+  }
+
+  p :global(.banner-pk) {
+    display: inline-block;
+    vertical-align: -6px;
+    margin-right: 6px;
   }
 
   strong {

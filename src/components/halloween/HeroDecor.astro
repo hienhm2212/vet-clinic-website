@@ -1,39 +1,21 @@
 ---
 import Bat from './Bat.astro'
+import Ghost from './Ghost.astro'
 import Pumpkin from './Pumpkin.astro'
+import Spider from './Spider.astro'
 ---
 
 <!-- Decorative only; hidden outside the Halloween window by the global `.seasonal` rule. -->
 <div class="decor seasonal" aria-hidden="true">
-  <Bat class="bat bat-1" size={64} />
-  <Bat class="bat bat-2" size={44} />
-  <Bat class="bat bat-3" size={34} />
-
-  <div class="spider">
-    <span class="thread"></span>
-    <svg width="34" height="30" viewBox="0 0 34 30">
-      <g stroke="#2e1065" stroke-width="2" stroke-linecap="round" fill="none">
-        <path d="M11 13 3 7M11 16 1 16M11 19 3 26M23 13l8-6M23 16h10M23 19l8 7"></path>
-      </g>
-      <ellipse cx="17" cy="17" rx="8" ry="9" fill="#2e1065"></ellipse>
-      <circle cx="14" cy="15" r="2" fill="#fff"></circle>
-      <circle cx="20" cy="15" r="2" fill="#fff"></circle>
-      <circle cx="14.4" cy="15.4" r="1" fill="#2e1065"></circle>
-      <circle cx="20.4" cy="15.4" r="1" fill="#2e1065"></circle>
-    </svg>
+  <div class="flight flight-1"><Bat size={70} beat={0.4} /></div>
+  <div class="flight flight-2"><Bat size={46} beat={0.32} /></div>
+  <div class="flight flight-3"><Bat size={36} beat={0.36} /></div>
+  <Spider class="spin" drop={120} />
+  <Ghost class="boo" size={64} />
+  <div class="patch">
+    <Pumpkin class="pk-big" size={92} />
+    <Pumpkin class="pk-small" size={58} delay={1.3} />
   </div>
-
-  <svg class="ghost" width="58" height="66" viewBox="0 0 58 66">
-    <path d="M29 2C14 2 5 13 5 28v34l8-6 8 6 8-6 8 6 8-6 8 6V28C53 13 44 2 29 2z" fill="#fff" stroke="#e9d5ff" stroke-width="2"></path>
-    <ellipse cx="21" cy="27" rx="4" ry="5.5" fill="#2e1065"></ellipse>
-    <ellipse cx="37" cy="27" rx="4" ry="5.5" fill="#2e1065"></ellipse>
-    <ellipse cx="29" cy="40" rx="4" ry="3" fill="#2e1065"></ellipse>
-    <ellipse cx="15" cy="35" rx="3.5" ry="2" fill="#fbcfe8"></ellipse>
-    <ellipse cx="43" cy="35" rx="3.5" ry="2" fill="#fbcfe8"></ellipse>
-  </svg>
-
-  <Pumpkin class="pumpkin pumpkin-1" size={84} />
-  <Pumpkin class="pumpkin pumpkin-2" size={52} />
 </div>
 
 <style>
@@ -44,142 +26,133 @@ import Pumpkin from './Pumpkin.astro'
     pointer-events: none;
   }
 
-  .decor :global(.bat),
-  .ghost,
-  .spider,
-  .decor :global(.pumpkin) {
+  .flight {
     position: absolute;
   }
 
-  .decor :global(.bat-1) {
-    top: 0;
-    left: 6%;
+  .flight-1 {
+    top: -2%;
+    left: 4%;
   }
 
-  .decor :global(.bat-2) {
-    top: -3%;
-    left: 44%;
+  .flight-2 {
+    top: -4%;
+    left: 46%;
   }
 
-  .decor :global(.bat-3) {
-    top: 4%;
+  .flight-3 {
+    top: 10%;
+    right: 0;
+  }
+
+  .decor :global(.spin) {
+    right: 3%;
+  }
+
+  .decor :global(.boo) {
+    position: absolute;
+    top: 36%;
+    left: 0;
+    filter: drop-shadow(0 10px 14px rgb(46 16 101 / 22%));
+  }
+
+  .patch {
+    position: absolute;
     right: 2%;
-  }
-
-  .spider {
-    top: 0;
-    right: 4%;
+    bottom: -3%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform-origin: top center;
+    align-items: flex-end;
+    flex-direction: row-reverse;
   }
 
-  .thread {
-    width: 2px;
-    height: 120px;
-    background: linear-gradient(#2e106533, #2e1065);
+  .patch :global(.pk-small) {
+    margin-right: -14px;
+    margin-bottom: 2px;
   }
 
-  .spider svg {
-    margin-top: -4px;
-  }
-
-  .ghost {
-    top: 38%;
-    left: 2%;
-    filter: drop-shadow(0 8px 14px rgb(46 16 101 / 25%));
-  }
-
-  .decor :global(.pumpkin-1) {
-    right: 4%;
-    bottom: -2%;
-    filter: drop-shadow(0 8px 12px rgb(67 20 7 / 25%));
-  }
-
-  .decor :global(.pumpkin-2) {
-    right: 22%;
-    bottom: 0;
-  }
-
+  /* Flight paths: soft arcs with banking, each bat on its own rhythm. */
   @media (prefers-reduced-motion: no-preference) {
-    .decor :global(.bat-1) {
-      animation: flap 0.5s ease-in-out infinite alternate, drift 7s ease-in-out infinite;
+    :global(html[data-season]) .flight-1 {
+      animation: fly-a 9s ease-in-out infinite;
     }
 
-    .decor :global(.bat-2) {
-      animation: flap 0.4s ease-in-out infinite alternate, drift 5s ease-in-out -2s infinite reverse;
+    :global(html[data-season]) .flight-2 {
+      animation: fly-b 7s ease-in-out -3s infinite;
     }
 
-    .decor :global(.bat-3) {
-      animation: flap 0.45s ease-in-out infinite alternate, drift 6s ease-in-out -1s infinite;
-    }
-
-    .spider {
-      animation: dangle 3.5s ease-in-out infinite;
-    }
-
-    .ghost {
-      animation: boo 4s ease-in-out infinite;
+    :global(html[data-season]) .flight-3 {
+      animation: fly-c 8s ease-in-out -5s infinite;
     }
   }
 
-  @keyframes flap {
-    to {
-      scale: 1 0.55;
-    }
-  }
-
-  @keyframes drift {
-    50% {
-      translate: 18px -10px;
-    }
-  }
-
-  @keyframes dangle {
+  @keyframes fly-a {
     0%,
     100% {
-      transform: rotate(-4deg) translateY(0);
+      transform: translate(0, 0) rotate(-4deg);
+    }
+
+    25% {
+      transform: translate(26px, -14px) rotate(6deg);
     }
 
     50% {
-      transform: rotate(4deg) translateY(16px);
+      transform: translate(48px, 4px) rotate(-2deg);
+    }
+
+    75% {
+      transform: translate(18px, 14px) rotate(-8deg);
     }
   }
 
-  @keyframes boo {
+  @keyframes fly-b {
     0%,
     100% {
-      translate: 0 0;
-      rotate: -4deg;
+      transform: translate(0, 0) rotate(4deg);
+    }
+
+    33% {
+      transform: translate(-22px, 10px) rotate(-6deg);
+    }
+
+    66% {
+      transform: translate(16px, -8px) rotate(8deg);
+    }
+  }
+
+  @keyframes fly-c {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-6deg);
     }
 
     50% {
-      translate: 6px -12px;
-      rotate: 4deg;
+      transform: translate(-30px, 18px) rotate(6deg);
     }
   }
 
   @media (max-width: 760px) {
-    .thread {
-      height: 70px;
-    }
-
-    .ghost {
-      width: 44px;
-      height: 50px;
-    }
-
-    /* The doctor badge sits at the bottom on phones: keep the pumpkin off it. */
-    .decor :global(.pumpkin-1) {
-      top: 40%;
-      right: -2%;
+    /* The doctor badge sits at the bottom on phones: keep the pumpkins off it. */
+    .patch {
+      top: 38%;
+      right: -3%;
       bottom: auto;
-      width: 60px;
-      height: 60px;
     }
 
-    .decor :global(.pumpkin-2) {
+    .patch :global(.pk-big) {
+      width: 66px;
+      height: 59px;
+    }
+
+    .patch :global(.pk-small) {
+      display: none;
+    }
+
+    .decor :global(.boo) {
+      width: 50px;
+      height: 65px;
+    }
+
+    .flight-3 {
       display: none;
     }
   }

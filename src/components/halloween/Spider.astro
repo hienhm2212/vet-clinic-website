@@ -1,0 +1,134 @@
+---
+/* A fuzzy little spider that climbs up and down its silk thread. */
+interface Props {
+  class?: string
+  /** Resting thread length in px. */
+  drop?: number
+}
+const { class: className, drop = 110 } = Astro.props
+const id = `sp-${crypto.randomUUID().slice(0, 6)}`
+---
+
+<div class:list={['spider', className]} style={`--drop:${drop}px`} aria-hidden="true">
+  <span class="thread"></span>
+  <svg class="bug" width="46" height="40" viewBox="0 0 46 40" focusable="false">
+    <defs>
+      <radialGradient id={`${id}-b`} cx="0.35" cy="0.3" r="0.8">
+        <stop offset="0" stop-color="#5b21b6"></stop>
+        <stop offset="1" stop-color="#1e1035"></stop>
+      </radialGradient>
+    </defs>
+    <g class="legs legs-l" stroke="#1e1035" stroke-width="2" stroke-linecap="round" fill="none">
+      <path d="M16 18q-7-6-12-3M15 21q-8-1-13 2M16 24q-7 4-10 10M17 26q-4 5-5 11"></path>
+    </g>
+    <g class="legs legs-r" stroke="#1e1035" stroke-width="2" stroke-linecap="round" fill="none">
+      <path d="M30 18q7-6 12-3M31 21q8-1 13 2M30 24q7 4 10 10M29 26q4 5 5 11"></path>
+    </g>
+    <circle cx="23" cy="22" r="11" fill={`url(#${id}-b)`}></circle>
+    <path d="M14 15l-2-2M17 12l-1-3M23 11v-3M29 12l1-3M32 15l2-2" stroke="#3b0764" stroke-width="1.4" stroke-linecap="round"></path>
+    <circle cx="19" cy="21" r="3.6" fill="#fff"></circle>
+    <circle cx="27" cy="21" r="3.6" fill="#fff"></circle>
+    <circle cx="19.6" cy="21.8" r="1.9" fill="#1e1035"></circle>
+    <circle cx="27.6" cy="21.8" r="1.9" fill="#1e1035"></circle>
+    <circle cx="20.2" cy="21" r="0.7" fill="#fff"></circle>
+    <circle cx="28.2" cy="21" r="0.7" fill="#fff"></circle>
+    <path d="M20.5 27q2.5 2 5 0" stroke="#f9a8d4" stroke-width="1.2" fill="none" stroke-linecap="round"></path>
+  </svg>
+</div>
+
+<style>
+  .spider {
+    position: absolute;
+    top: 0;
+    width: 46px;
+  }
+
+  .thread {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1.5px;
+    height: var(--drop);
+    translate: -50% 0;
+    background: linear-gradient(rgb(46 16 101 / 10%), rgb(46 16 101 / 60%));
+    transform-origin: top;
+  }
+
+  .bug {
+    position: absolute;
+    top: calc(var(--drop) - 12px);
+    left: 0;
+    overflow: visible;
+  }
+
+  .legs {
+    transform-box: fill-box;
+  }
+
+  .legs-l {
+    transform-origin: 100% 40%;
+  }
+
+  .legs-r {
+    transform-origin: 0% 40%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Thread and spider share the same timing so the silk always reaches the spider. */
+    :global(html[data-season]) .thread {
+      animation: silk 7s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .bug {
+      animation: climb 7s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .legs-l {
+      animation: wiggle-l 0.35s ease-in-out infinite alternate;
+    }
+
+    :global(html[data-season]) .legs-r {
+      animation: wiggle-r 0.35s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes silk {
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+
+    45%,
+    55% {
+      transform: scaleY(0.45);
+    }
+  }
+
+  @keyframes climb {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0);
+    }
+
+    45%,
+    55% {
+      transform: translateY(calc(var(--drop) * -0.55)) rotate(6deg);
+    }
+
+    70% {
+      transform: translateY(6px) rotate(-4deg);
+    }
+  }
+
+  @keyframes wiggle-l {
+    to {
+      transform: rotate(8deg);
+    }
+  }
+
+  @keyframes wiggle-r {
+    to {
+      transform: rotate(-8deg);
+    }
+  }
+</style>
