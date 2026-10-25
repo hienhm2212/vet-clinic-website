@@ -769,6 +769,11 @@ const steps = [
       display: grid;
     }
 
+    /* One item per line: wrapping can't change when the bold web font swaps in. */
+    .hero-trust {
+      flex-direction: column;
+    }
+
     .quick-grid,
     .steps,
     .services-grid {

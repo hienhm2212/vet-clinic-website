@@ -1,0 +1,157 @@
+---
+/* Friendly ghost: floats, waves, blinks; its shadow shrinks as it rises. */
+interface Props {
+  class?: string
+  size?: number
+}
+const { class: className, size = 70 } = Astro.props
+const id = `gh-${crypto.randomUUID().slice(0, 6)}`
+---
+
+<svg class:list={['ghost', className]} width={size} height={size * 1.3} viewBox="0 0 70 91" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={`${id}-body`} x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#ffffff"></stop>
+      <stop offset="0.7" stop-color="#f5f3ff"></stop>
+      <stop offset="1" stop-color="#ddd6fe"></stop>
+    </linearGradient>
+  </defs>
+  <ellipse class="shadow" cx="35" cy="87" rx="20" ry="3" fill="#2e1065" opacity="0.18"></ellipse>
+  <g class="float">
+    <g class="arm arm-l">
+      <ellipse cx="9" cy="46" rx="6" ry="4" fill={`url(#${id}-body)`} transform="rotate(-30 9 46)"></ellipse>
+    </g>
+    <g class="arm arm-r">
+      <ellipse cx="61" cy="46" rx="6" ry="4" fill={`url(#${id}-body)`} transform="rotate(30 61 46)"></ellipse>
+    </g>
+    <path
+      d="M35 4C17 4 8 18 8 36v30q4 8 9 2 5-6 9 2 4 7 9 0 5-8 9 0 4 7 9-2 5-6 9 2V36C62 18 53 4 35 4z"
+      fill={`url(#${id}-body)`}
+      stroke="#e9d5ff"
+      stroke-width="1.5"></path>
+    <ellipse cx="25" cy="18" rx="5" ry="8" fill="#fff" opacity="0.9" transform="rotate(-25 25 18)"></ellipse>
+    <g class="eyes">
+      <ellipse cx="26" cy="35" rx="4.2" ry="5.8" fill="#2e1065"></ellipse>
+      <ellipse cx="44" cy="35" rx="4.2" ry="5.8" fill="#2e1065"></ellipse>
+      <circle cx="27.4" cy="33" r="1.5" fill="#fff"></circle>
+      <circle cx="45.4" cy="33" r="1.5" fill="#fff"></circle>
+    </g>
+    <ellipse cx="18.5" cy="43" rx="4" ry="2.2" fill="#f9a8d4" opacity="0.6"></ellipse>
+    <ellipse cx="51.5" cy="43" rx="4" ry="2.2" fill="#f9a8d4" opacity="0.6"></ellipse>
+    <ellipse cx="35" cy="45" rx="3.2" ry="3.8" fill="#2e1065"></ellipse>
+    <ellipse cx="35" cy="46.5" rx="1.8" ry="1.6" fill="#f472b6"></ellipse>
+  </g>
+</svg>
+
+<style>
+  .ghost {
+    overflow: visible;
+  }
+
+  .float,
+  .shadow,
+  .arm,
+  .eyes {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .arm-l {
+    transform-origin: 100% 50%;
+  }
+
+  .arm-r {
+    transform-origin: 0% 50%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-season]) .float {
+      animation: rise 4.5s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .shadow {
+      animation: shrink 4.5s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .arm-r {
+      animation: wave 4.5s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .arm-l {
+      animation: sway 4.5s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .eyes {
+      animation: blink 4s steps(1, end) 1s infinite;
+    }
+  }
+
+  @keyframes rise {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-3deg);
+    }
+
+    50% {
+      transform: translateY(-10px) rotate(3deg);
+    }
+  }
+
+  @keyframes shrink {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.18;
+    }
+
+    50% {
+      transform: scale(0.7);
+      opacity: 0.1;
+    }
+  }
+
+  @keyframes wave {
+    0%,
+    40%,
+    100% {
+      transform: rotate(0);
+    }
+
+    50% {
+      transform: rotate(-35deg);
+    }
+
+    60% {
+      transform: rotate(-10deg);
+    }
+
+    70% {
+      transform: rotate(-35deg);
+    }
+
+    80% {
+      transform: rotate(0);
+    }
+  }
+
+  @keyframes sway {
+    50% {
+      transform: rotate(12deg);
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    93% {
+      transform: none;
+    }
+
+    94% {
+      transform: scaleY(0.12);
+    }
+
+    97% {
+      transform: none;
+    }
+  }
+</style>
