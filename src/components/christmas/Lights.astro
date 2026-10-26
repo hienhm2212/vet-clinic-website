@@ -1,0 +1,79 @@
+---
+/* A sagging string of fairy lights. Bulbs are grouped by colour and each group
+   twinkles on its own beat — three animations for the whole string. */
+interface Props {
+  class?: string
+  /** Number of bulbs along the wire. */
+  count?: number
+  /** Drawing width; pick it close to the rendered width so bulbs keep a natural size. */
+  width?: number
+}
+const { class: className, count = 11, width: W = 600 } = Astro.props
+const sag = 34
+const colors = ['red', 'gold', 'green', 'blue'] as const
+const fills = { red: '#ef4444', gold: '#fbbf24', green: '#22c55e', blue: '#38bdf8' }
+const bulbs = Array.from({ length: count }, (_, i) => {
+  const t = (i + 0.5) / count
+  const x = t * W
+  const y = 6 + sag * 4 * t * (1 - t)
+  return { x, y, color: colors[i % colors.length] }
+})
+---
+
+<svg class:list={['lights', className]} viewBox={`0 0 ${W} 60`} aria-hidden="true" focusable="false">
+  <path d={`M0 6 Q${W / 2} ${6 + sag * 2} ${W} 6`} stroke="#14532d" stroke-width="2.5" fill="none"></path>
+  {
+    colors.map(c => (
+      <g class={`bulbs bulbs--${c}`}>
+        {bulbs
+          .filter(b => b.color === c)
+          .map(b => (
+            <g transform={`translate(${b.x} ${b.y})`}>
+              <rect x="-3" y="-1" width="6" height="5" rx="1" fill="#166534" />
+              <ellipse cx="0" cy="10" rx="9" ry="9" fill={fills[c]} opacity="0.25" />
+              <ellipse cx="0" cy="10" rx="4.2" ry="6.5" fill={fills[c]} />
+              <ellipse cx="-1.4" cy="8" rx="1.2" ry="2.2" fill="#fff" opacity="0.7" />
+            </g>
+          ))}
+      </g>
+    ))
+  }
+</svg>
+
+<style>
+  .lights {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-season]) .bulbs--red {
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .bulbs--gold {
+      animation: twinkle 2.4s ease-in-out -0.6s infinite;
+    }
+
+    :global(html[data-season]) .bulbs--green {
+      animation: twinkle 2.4s ease-in-out -1.2s infinite;
+    }
+
+    :global(html[data-season]) .bulbs--blue {
+      animation: twinkle 2.4s ease-in-out -1.8s infinite;
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.35;
+    }
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import type { Season } from '../../data/season'
+
+interface Props {
+  season: Season
+  /** Accessible name of the banner landmark. */
+  label: string
+  closeLabel: string
+}
+const { season, label, closeLabel } = Astro.props
+---
+
+<aside
+  class={`season-banner seasonal seasonal--${season.name}`}
+  data-theme={season.name}
+  aria-label={label}
+  data-season-key={season.storageKey}
+>
+  <p><slot /></p>
+  <button type="button" data-season-dismiss aria-label={closeLabel}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+  </button>
+</aside>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.season-banner').forEach(banner => {
+    banner.querySelector('[data-season-dismiss]')?.addEventListener('click', () => {
+      document.documentElement.dataset.seasonBanner = 'hidden'
+      try {
+        localStorage.setItem(banner.dataset.seasonKey!, '1')
+      } catch {
+        /* storage blocked: the banner stays closed for this page view only */
+      }
+    })
+  })
+</script>
+
+<style>
+  .season-banner {
+    position: relative;
+    z-index: 51;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 56px 10px var(--gutter);
+    font-size: 0.95rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .season-banner[data-theme='halloween'] {
+    background:
+      radial-gradient(circle at 8% 50%, rgb(249 115 22 / 35%), transparent 30%),
+      linear-gradient(90deg, #2e1065, #4c1d95 50%, #2e1065);
+    color: #f5f3ff;
+  }
+
+  .season-banner[data-theme='christmas'] {
+    background:
+      radial-gradient(circle at 92% 50%, rgb(251 191 36 / 28%), transparent 28%),
+      linear-gradient(90deg, #7f1d1d, #b91c1c 50%, #7f1d1d);
+    color: #fff7ed;
+  }
+
+  :global(html[data-season-banner='hidden']) .season-banner {
+    display: none;
+  }
+
+  p {
+    position: relative;
+    max-width: 960px;
+  }
+
+  p :global(strong) {
+    color: #fde68a;
+  }
+
+  p :global(a) {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  p :global(a:hover) {
+    color: #fde68a;
+  }
+
+  p :global(.banner-icon) {
+    display: inline-block;
+    vertical-align: -6px;
+    margin-right: 6px;
+  }
+
+  button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: rgb(255 255 255 / 12%);
+  }
+</style>

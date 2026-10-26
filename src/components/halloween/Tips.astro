@@ -13,7 +13,7 @@ const { lang } = Astro.props
 const vi = lang === 'vi'
 ---
 
-<section class="tips seasonal" aria-labelledby="halloween-title">
+<section class="tips seasonal seasonal--halloween" aria-labelledby="halloween-title">
   <div class="sky" aria-hidden="true">
     {Array.from({ length: 9 }, (_, i) => <span class={`star star-${i}`} />)}
     <div class="moon">

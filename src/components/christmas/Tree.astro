@@ -1,0 +1,83 @@
+---
+/* A decorated Christmas tree with a glowing star and twinkling baubles. */
+interface Props {
+  class?: string
+  size?: number
+}
+const { class: className, size = 150 } = Astro.props
+const id = `tree-${crypto.randomUUID().slice(0, 6)}`
+---
+
+<svg class:list={['tree', className]} width={size} height={size * 1.25} viewBox="0 0 120 150" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4ade80"></stop>
+      <stop offset="0.5" stop-color="#16a34a"></stop>
+      <stop offset="1" stop-color="#14532d"></stop>
+    </linearGradient>
+    <radialGradient id={`${id}-star`} cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#fffbeb"></stop>
+      <stop offset="1" stop-color="#f59e0b"></stop>
+    </radialGradient>
+  </defs>
+  <ellipse cx="60" cy="146" rx="40" ry="4" fill="#000" opacity="0.25"></ellipse>
+  <rect x="52" y="124" width="16" height="20" rx="3" fill="#78350f"></rect>
+  <path d="M60 24 28 70h14L18 104h18L6 132h108L84 104h18L78 70h14z" fill={`url(#${id}-g)`}></path>
+  <path d="M60 24 40 54l8-2zM54 74 30 104l10-3zM50 108l-24 22 12-3z" fill="#fff" opacity="0.18"></path>
+  <path d="M36 66q24 10 48 0M26 100q34 12 68 0M14 128q46 12 92 0" stroke="#fbbf24" stroke-width="2" fill="none" opacity="0.9"></path>
+  <g class="baubles baubles-a">
+    <circle cx="48" cy="76" r="4.5" fill="#ef4444"></circle>
+    <circle cx="74" cy="108" r="5" fill="#ef4444"></circle>
+    <circle cx="36" cy="120" r="5" fill="#ef4444"></circle>
+    <circle cx="88" cy="128" r="4.5" fill="#ef4444"></circle>
+  </g>
+  <g class="baubles baubles-b">
+    <circle cx="70" cy="60" r="4" fill="#38bdf8"></circle>
+    <circle cx="46" cy="104" r="4.5" fill="#38bdf8"></circle>
+    <circle cx="62" cy="128" r="5" fill="#38bdf8"></circle>
+    <circle cx="80" cy="84" r="4.5" fill="#fbbf24"></circle>
+  </g>
+  <g class="star">
+    <circle cx="60" cy="20" r="15" fill="#fde68a" opacity="0.35"></circle>
+    <path d="m60 6 4.1 8.4 9.2 1.3-6.6 6.5 1.6 9.1L60 27l-8.3 4.3 1.6-9.1-6.6-6.5 9.2-1.3z" fill={`url(#${id}-star)`}></path>
+  </g>
+</svg>
+
+<style>
+  .star,
+  .baubles {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-season]) .star {
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .baubles-a {
+      animation: glimmer 2.6s ease-in-out infinite;
+    }
+
+    :global(html[data-season]) .baubles-b {
+      animation: glimmer 2.6s ease-in-out -1.3s infinite;
+    }
+  }
+
+  @keyframes shine {
+    0%,
+    100% {
+      transform: scale(1) rotate(0);
+    }
+
+    50% {
+      transform: scale(1.12) rotate(8deg);
+    }
+  }
+
+  @keyframes glimmer {
+    50% {
+      opacity: 0.55;
+    }
+  }
+</style>

@@ -30,7 +30,7 @@ const isActive = (key: RouteKey) => {
   <div class="container bar">
     <a class="brand" href={route('home', lang)} aria-label={tr(clinic.name, lang)}>
       <Logo />
-      <svg class="witch-hat seasonal" width="40" height="34" viewBox="0 0 40 34" aria-hidden="true" focusable="false">
+      <svg class="witch-hat seasonal seasonal--halloween" width="40" height="34" viewBox="0 0 40 34" aria-hidden="true" focusable="false">
         <defs>
           <linearGradient id="hat-cone" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#7c3aed"></stop>
@@ -43,6 +43,20 @@ const isActive = (key: RouteKey) => {
         <rect x="17.6" y="22" width="5" height="4.6" rx="1" fill="none" stroke="#fde047" stroke-width="1.4"></rect>
         <ellipse cx="16" cy="13" rx="1.5" ry="4" fill="#fff" opacity="0.18" transform="rotate(20 16 13)"></ellipse>
         <circle cx="30" cy="3.2" r="1.6" fill="#fde047"></circle>
+      </svg>
+      <svg class="santa-hat seasonal seasonal--christmas" width="42" height="34" viewBox="0 0 42 34" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="santa-red" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f87171"></stop>
+            <stop offset="0.5" stop-color="#dc2626"></stop>
+            <stop offset="1" stop-color="#991b1b"></stop>
+          </linearGradient>
+        </defs>
+        <path d="M6 25C8 12 18 4 28 6c6 1 9 7 10 13l-5 1c-1-4-3-7-6-7-6 0-10 6-11 12z" fill="url(#santa-red)"></path>
+        <ellipse cx="14" cy="13" rx="2" ry="5" fill="#fff" opacity="0.25" transform="rotate(40 14 13)"></ellipse>
+        <rect x="3" y="22" width="26" height="8" rx="4" fill="#f8fafc"></rect>
+        <path d="M5 26h22" stroke="#cbd5e1" stroke-width="1" stroke-linecap="round" opacity="0.7"></path>
+        <g class="pompom"><circle cx="36" cy="21" r="4.5" fill="#f8fafc"></circle><circle cx="34.8" cy="19.8" r="1.4" fill="#fff"></circle></g>
       </svg>
       <span class="brand-text">
         <span class="brand-name">{tr(clinic.shortName, lang)}</span>
@@ -136,6 +150,47 @@ const isActive = (key: RouteKey) => {
     transform-origin: 50% 80%;
     transition: rotate 0.3s ease;
     filter: drop-shadow(0 2px 2px rgb(46 16 101 / 25%));
+  }
+
+  .santa-hat {
+    position: absolute;
+    top: -15px;
+    left: -10px;
+    rotate: -14deg;
+    transform-origin: 30% 90%;
+    transition: rotate 0.3s ease;
+    filter: drop-shadow(0 2px 2px rgb(127 29 29 / 25%));
+  }
+
+  .santa-hat .pompom {
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+  }
+
+  .brand:hover .santa-hat {
+    rotate: -24deg;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-season]) .santa-hat .pompom {
+      animation: pompom 3s ease-in-out infinite;
+    }
+  }
+
+  @keyframes pompom {
+    0%,
+    70%,
+    100% {
+      transform: none;
+    }
+
+    78% {
+      transform: translate(1px, 3px) scale(1.08, 0.92);
+    }
+
+    86% {
+      transform: translate(-1px, -1px);
+    }
   }
 
   .brand:hover .witch-hat {

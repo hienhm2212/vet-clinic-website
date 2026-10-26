@@ -20,7 +20,10 @@ test('decorations show during the Halloween window', async ({ page }) => {
   await expect(banner(page).getByRole('link', { name: /0961 291 597/ })).toHaveAttribute('href', 'tel:+84961291597')
   await expect(tips(page)).toBeVisible()
   await expect(page.locator('.witch-hat')).toBeVisible()
-  await expect(page.locator('.hero .decor')).toBeVisible()
+  await expect(page.locator('.hero .decor--halloween')).toBeVisible()
+  // Only one season is ever on at a time.
+  await expect(page.locator('.hero .decor--christmas')).toBeHidden()
+  await expect(page.locator('.santa-hat')).toBeHidden()
 })
 
 test('decorations are hidden outside the window', async ({ page }) => {

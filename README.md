@@ -27,13 +27,19 @@ Mỗi đoạn chữ có hai bản `{ vi: '…', en: '…' }`.
 Thêm ảnh: chép file vào `src/assets/photos/`, khai báo trong `photos.ts`. Astro tự nén sang AVIF/WebP.
 Nếu đổi logo hoặc thông tin trên ảnh chia sẻ, chạy `npm run og` để tạo lại `public/og-image.jpg` và các icon.
 
-## Trang trí theo mùa (Halloween)
+## Trang trí theo mùa
 
-Giao diện Halloween **tự bật từ 15/10 đến hết 1/11** (giờ Việt Nam) rồi tự tắt; không cần sửa code hay deploy lại. Giao diện gồm banner nhắc an toàn cho thú cưng (khách tắt được), dơi, nhện, bí ngô, ma quanh ảnh đầu trang, mũ phù thủy trên logo và mục "Halloween an toàn cho bé" ở trang chủ.
+Giao diện theo mùa **tự bật và tự tắt theo giờ Việt Nam**, không cần sửa code hay deploy lại:
 
-- Đổi ngày bật/tắt: sửa `start` / `end` trong `src/data/season.ts`
-- Xem trước bất kỳ lúc nào: thêm `?season=halloween` vào URL; ẩn đi: `?season=off`
-- Các thành phần nằm trong `src/components/halloween/`
+| Mùa | Thời gian | Nội dung |
+|---|---|---|
+| 🎃 Halloween | 15/10 – 1/11 | Banner nhắc socola/kẹo độc, dơi, nhện, ma, bí ngô, mũ phù thủy, mục "Halloween an toàn cho bé" với mèo đen |
+| 🎄 Giáng sinh | 1/12 – 31/12 | Banner nhắc kim tuyến/dây đèn/đồ tiệc, dây đèn, tuyết rơi, quả châu, người tuyết, hộp quà, mũ Noel, mục "Giáng sinh an toàn cho bé" với cây thông và chó đội mũ Noel |
+
+- Đổi ngày: sửa `start` / `end` trong `src/data/season.ts`
+- Xem trước bất kỳ lúc nào: thêm `?season=halloween` hoặc `?season=christmas` vào URL; ẩn đi: `?season=off`
+- Thành phần nằm trong `src/components/halloween/`, `src/components/christmas/`; phần dùng chung (script đầu trang, banner) trong `src/components/season/`
+- Thêm mùa mới (VD: Tết): khai báo trong `seasons` ở `season.ts`, thêm quy tắc `.seasonal--<tên>` trong `global.css`, rồi tạo thư mục component theo mẫu
 
 ## Cấu trúc trang
 

@@ -24,6 +24,8 @@ of the phone number or the booking button.
 
 Seasonal palettes extend the brand; they don't replace it. Halloween: night purples
 `#1e1035 #2e1065 #4c1d95`, lavender `#ddd6fe`, pumpkin `#f97316 → #c2410c`, candle glow `#fde68a`.
+Christmas: night `#0b2440 → #0f3b2f`, pine `#16a34a → #14532d`, berry red `#dc2626 → #991b1b`,
+gold `#fbbf24`, snow `#f8fafc` (on light backgrounds draw snow in pale blue `#93b4de` so it shows).
 Check text contrast (AA) on any new background — the axe tests will fail otherwise.
 
 ## 2. Illustration style
@@ -74,9 +76,12 @@ Good motion feels alive, not busy.
 
 ## 4. Seasonal decorations — how they're wired
 
-- Season windows live in `src/data/season.ts`; a tiny head script sets `data-season` on `<html>`
-  before first paint. Decoration markup carries class `seasonal` and is hidden outside the window
-  by a global rule — so no layout shift and no redeploy to remove it.
+- Season windows live in `seasons` in `src/data/season.ts`; a tiny head script
+  (`src/components/season/SeasonScript.astro`) sets `data-season` on `<html>` before first paint.
+  Decoration markup carries `seasonal seasonal--<name>` and is hidden outside its window by a
+  rule in `global.css` — so no layout shift and no redeploy to remove it.
+- Banners use the shared `src/components/season/SeasonBanner.astro`; each season's dismissal is
+  remembered under its own storage key.
 - Components live in `src/components/<season>/`. Preview any time with `?season=<name>`.
 - Add a new season by following the Halloween pattern rather than inventing a new mechanism.
 

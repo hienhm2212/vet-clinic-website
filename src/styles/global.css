@@ -89,7 +89,8 @@
 
 /* Seasonal decorations exist in the HTML year-round; a tiny head script turns
    them on inside the season window (see src/data/season.ts). */
-html:not([data-season='halloween']) .seasonal {
+html:not([data-season='halloween']) .seasonal--halloween,
+html:not([data-season='christmas']) .seasonal--christmas {
   display: none !important;
 }
 

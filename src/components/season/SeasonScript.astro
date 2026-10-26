@@ -1,0 +1,22 @@
+---
+import { seasons } from '../../data/season'
+const windows = seasons.map(({ name, start, end, storageKey }) => ({ name, start, end, key: storageKey }))
+---
+
+<!-- Runs before first paint so seasonal decorations never cause a layout shift. -->
+<script is:inline define:vars={{ windows }}>
+  try {
+    var root = document.documentElement
+    var q = new URLSearchParams(location.search).get('season')
+    var md = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', month: '2-digit', day: '2-digit' }).format(new Date())
+    var active = null
+    for (var i = 0; i < windows.length; i++) {
+      var w = windows[i]
+      if (q ? q === w.name : md >= w.start && md <= w.end) active = w
+    }
+    if (active) {
+      root.dataset.season = active.name
+      if (localStorage.getItem(active.key)) root.dataset.seasonBanner = 'hidden'
+    }
+  } catch (e) {}
+</script>

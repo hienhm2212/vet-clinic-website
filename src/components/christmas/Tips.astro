@@ -1,0 +1,225 @@
+---
+import Dog from './Dog.astro'
+import Gift from './Gift.astro'
+import Lights from './Lights.astro'
+import Snow from './Snow.astro'
+import Tree from './Tree.astro'
+import { clinic } from '../../data/clinic'
+import { christmasTips } from '../../data/season'
+import { tr, type Lang } from '../../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const vi = lang === 'vi'
+---
+
+<section class="tips seasonal seasonal--christmas" aria-labelledby="christmas-title">
+  <Snow tone="dark" />
+  <Lights class="top-lights top-lights--wide" width={1400} count={26} />
+  <Lights class="top-lights top-lights--narrow" width={600} count={11} />
+  <Tree class="tree" size={150} />
+  <div class="container inner">
+    <div class="head">
+      <span class="tag"><span aria-hidden="true">🎄</span> {vi ? 'Giáng sinh' : 'Christmas'}</span>
+      <h2 id="christmas-title">{vi ? 'Giáng sinh an toàn cho bé' : 'A safe Christmas for your pet'}</h2>
+      <p>
+        {
+          vi
+            ? 'Cây thông, dây đèn và bữa tiệc làm mùa lễ thêm vui — nhưng cũng là lý do nhiều bé phải nhập viện cuối năm. Vài lưu ý để cả nhà đón lễ trọn vẹn:'
+            : 'Trees, lights and feasts make the season fun — and send many pets to the vet at year’s end. A few tips for a happy holiday:'
+        }
+      </p>
+    </div>
+    <ul class="grid">
+      {
+        christmasTips.map(t => (
+          <li class="tip">
+            <span class="emoji" aria-hidden="true">
+              {t.icon}
+            </span>
+            <h3>{tr(t.title, lang)}</h3>
+            <p>{tr(t.text, lang)}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="alert">
+      <Dog class="perch" size={96} />
+      <Gift size={58} />
+      <p>
+        <strong>{vi ? 'Bé lỡ nuốt kim tuyến hay ăn đồ tiệc?' : 'Did your pet swallow tinsel or eat party food?'}</strong>
+        {vi ? ' Đừng tự kéo dây ra hay chờ triệu chứng — gọi bác sĩ ngay.' : ' Don’t pull at strings or wait for symptoms — call the vet now.'}
+      </p>
+      <a class="btn btn--primary" href={clinic.phoneHref}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        {clinic.phone}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tips {
+    position: relative;
+    margin-top: clamp(40px, 6vw, 72px);
+    padding-block: clamp(72px, 9vw, 104px) clamp(56px, 8vw, 96px);
+    background:
+      radial-gradient(circle at 85% 20%, rgb(251 191 36 / 18%), transparent 35%),
+      radial-gradient(circle at 10% 100%, rgb(185 28 28 / 22%), transparent 40%),
+      linear-gradient(180deg, #0b2440, #0f3b2f);
+    color: #ecfdf5;
+    overflow: hidden;
+  }
+
+  .tips :global(.top-lights) {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .tips :global(.top-lights--narrow) {
+    display: none;
+  }
+
+  .tips :global(.tree) {
+    position: absolute;
+    right: 6%;
+    top: 84px;
+  }
+
+  .inner {
+    position: relative;
+  }
+
+  .head {
+    max-width: 640px;
+  }
+
+  .tag {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgb(251 191 36 / 16%);
+    color: #fde68a;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin-top: 12px;
+    color: #fff;
+  }
+
+  .head p {
+    margin-top: 12px;
+    color: #d1fae5;
+    font-size: 1.08rem;
+  }
+
+  .grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .tip {
+    padding: 24px;
+    border-radius: var(--radius);
+    background: rgb(255 255 255 / 8%);
+    border: 1px solid rgb(255 255 255 / 14%);
+    backdrop-filter: blur(4px);
+  }
+
+  .emoji {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .tip h3 {
+    margin-block: 12px 6px;
+    color: #fff;
+    font-size: 1.15rem;
+  }
+
+  .tip p {
+    color: #d1fae5;
+    font-size: 0.97rem;
+  }
+
+  .alert {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+    /* Room for the puppy perched on the top edge. */
+    margin-top: 96px;
+    padding: 18px 24px;
+    border-radius: var(--radius);
+    background: #fff7ed;
+    color: var(--ink);
+  }
+
+  .alert p {
+    flex: 1 1 280px;
+  }
+
+  .alert :global(.perch) {
+    position: absolute;
+    right: 210px;
+    bottom: calc(100% - 12px);
+  }
+
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tips :global(.tree) {
+      width: 96px;
+      height: 120px;
+      top: 48px;
+      right: 4%;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .tips :global(.top-lights--wide) {
+      display: none;
+    }
+
+    .tips :global(.top-lights--narrow) {
+      display: block;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* Keep the tree clear of the heading on narrow phones. */
+    .head {
+      padding-right: 84px;
+    }
+
+    .tips :global(.tree) {
+      width: 76px;
+      height: 95px;
+    }
+
+    .alert :global(.perch) {
+      right: 12px;
+      width: 76px;
+      height: 76px;
+    }
+  }
+</style>

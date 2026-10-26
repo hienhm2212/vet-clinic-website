@@ -3,8 +3,9 @@ import '../styles/global.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import ContactDock from '../components/ContactDock.astro'
-import SeasonScript from '../components/halloween/SeasonScript.astro'
+import SeasonScript from '../components/season/SeasonScript.astro'
 import HalloweenBanner from '../components/halloween/Banner.astro'
+import ChristmasBanner from '../components/christmas/Banner.astro'
 import { clinic } from '../data/clinic'
 import { clinicSchema, websiteSchema } from '../lib/schema'
 import { tr, ui, type Lang } from '../i18n'
@@ -87,6 +88,7 @@ const schemas = [clinicSchema(site, lang, ogImage), websiteSchema(site, lang), .
   <body>
     <a class="skip-link" href="#main">{tr(ui.skip, lang)}</a>
     <HalloweenBanner lang={lang} />
+    <ChristmasBanner lang={lang} />
     <Header lang={lang} alternates={alternates} />
     <main id="main" tabindex="-1">
       <slot />

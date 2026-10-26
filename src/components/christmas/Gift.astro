@@ -1,0 +1,99 @@
+---
+/* A wrapped present whose lid hops now and then (squash, pop, settle). */
+interface Props {
+  class?: string
+  size?: number
+  box?: 'red' | 'green' | 'cream'
+  delay?: number
+}
+const { class: className, size = 70, box = 'red', delay = 0 } = Astro.props
+const id = `gift-${crypto.randomUUID().slice(0, 6)}`
+const palette = {
+  red: { light: '#f87171', base: '#dc2626', dark: '#991b1b', ribbon: '#fbbf24', ribbonDark: '#b45309' },
+  green: { light: '#4ade80', base: '#16a34a', dark: '#14532d', ribbon: '#ef4444', ribbonDark: '#991b1b' },
+  cream: { light: '#fffbeb', base: '#fde68a', dark: '#d97706', ribbon: '#16a34a', ribbonDark: '#14532d' },
+}[box]
+---
+
+<svg class:list={['gift', className]} style={`--delay:${-delay}s`} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={`${id}-box`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color={palette.light}></stop>
+      <stop offset="0.45" stop-color={palette.base}></stop>
+      <stop offset="1" stop-color={palette.dark}></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-rib`} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color={palette.ribbon}></stop>
+      <stop offset="1" stop-color={palette.ribbonDark}></stop>
+    </linearGradient>
+  </defs>
+  <ellipse cx="32" cy="61" rx="24" ry="3" fill="#1e293b" opacity="0.15"></ellipse>
+  <g class="base">
+    <rect x="10" y="30" width="44" height="30" rx="3" fill={`url(#${id}-box)`}></rect>
+    <rect x="28.5" y="30" width="7" height="30" fill={`url(#${id}-rib)`}></rect>
+    <rect x="10" y="30" width="44" height="4" fill="#000" opacity="0.12"></rect>
+  </g>
+  <g class="lid">
+    <rect x="7" y="21" width="50" height="11" rx="3" fill={`url(#${id}-box)`}></rect>
+    <rect x="28.5" y="21" width="7" height="11" fill={`url(#${id}-rib)`}></rect>
+    <rect x="10" y="22.5" width="14" height="2" rx="1" fill="#fff" opacity="0.35"></rect>
+    <path d="M32 21c-4-9-15-11-15-4 0 4 8 5 15 4zM32 21c4-9 15-11 15-4 0 4-8 5-15 4z" fill={`url(#${id}-rib)`}></path>
+    <circle cx="32" cy="20.5" r="3" fill={palette.ribbonDark}></circle>
+  </g>
+</svg>
+
+<style>
+  .lid,
+  .base {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-season]) .lid {
+      animation: hop 5s ease-in-out var(--delay) infinite;
+    }
+
+    :global(html[data-season]) .base {
+      animation: squash 5s ease-in-out var(--delay) infinite;
+    }
+  }
+
+  /* Anticipation (squash) → pop → wobble → settle */
+  @keyframes hop {
+    0%,
+    70%,
+    100% {
+      transform: none;
+    }
+
+    76% {
+      transform: translateY(2px);
+    }
+
+    82% {
+      transform: translateY(-9px) rotate(-6deg);
+    }
+
+    88% {
+      transform: translateY(-3px) rotate(4deg);
+    }
+
+    94% {
+      transform: none;
+    }
+  }
+
+  @keyframes squash {
+    0%,
+    70%,
+    80%,
+    100% {
+      transform: none;
+    }
+
+    76% {
+      transform: scale(1.04, 0.94);
+    }
+  }
+</style>

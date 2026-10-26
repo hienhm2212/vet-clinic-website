@@ -1,0 +1,93 @@
+---
+import Gift from './Gift.astro'
+import Lights from './Lights.astro'
+import Ornament from './Ornament.astro'
+import Snow from './Snow.astro'
+import Snowman from './Snowman.astro'
+---
+
+<!-- Decorative only; hidden outside the Christmas window by the global `.seasonal--christmas` rule. -->
+<div class="decor decor--christmas seasonal seasonal--christmas" aria-hidden="true">
+  <Snow tone="light" />
+  <Lights class="garland" count={11} />
+  <Ornament class="orn-1" hue="red" drop={64} />
+  <Ornament class="orn-2" hue="gold" drop={104} size={36} delay={1.4} />
+  <Snowman class="frosty" size={74} />
+  <div class="presents">
+    <Gift box="red" size={84} />
+    <Gift class="gift-2" box="green" size={60} delay={1.6} />
+    <Gift class="gift-3" box="cream" size={46} delay={3.1} />
+  </div>
+</div>
+
+<style>
+  .decor {
+    position: absolute;
+    inset: -12px -8px -8px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .decor :global(.garland) {
+    position: absolute;
+    top: -2px;
+    left: 6%;
+    width: 88%;
+  }
+
+  .decor :global(.orn-1) {
+    right: 6%;
+  }
+
+  .decor :global(.orn-2) {
+    right: 16%;
+  }
+
+  .decor :global(.frosty) {
+    position: absolute;
+    top: 38%;
+    left: -1%;
+  }
+
+  .presents {
+    position: absolute;
+    right: 2%;
+    bottom: -2%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .presents :global(.gift-2) {
+    margin-right: -16px;
+  }
+
+  .presents :global(.gift-3) {
+    margin-right: -12px;
+  }
+
+  @media (max-width: 760px) {
+    /* The doctor badge sits at the bottom on phones: keep the presents off it. */
+    .presents {
+      top: 36%;
+      right: -3%;
+      bottom: auto;
+    }
+
+    .presents :global(.gift) {
+      width: 58px;
+      height: 58px;
+    }
+
+    .presents :global(.gift-2),
+    .presents :global(.gift-3),
+    .decor :global(.orn-2) {
+      display: none;
+    }
+
+    .decor :global(.frosty) {
+      width: 54px;
+      height: 68px;
+    }
+  }
+</style>
